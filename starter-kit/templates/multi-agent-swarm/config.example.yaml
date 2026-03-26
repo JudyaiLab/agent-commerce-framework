@@ -1,0 +1,26 @@
+# Multi-Agent Swarm Configuration
+
+marketplace:
+  url: "https://agentictrade.io"
+  api_key: "your_key_id:your_secret"
+
+swarm:
+  # Maximum total spend per swarm run
+  budget_limit: 10.00
+  # Minimum reputation score to consider a service
+  min_reputation: 3.5
+  # Categories to search
+  search_categories: ["crypto", "data", "ai"]
+  # Maximum concurrent agent tasks
+  max_concurrency: 3
+
+buyer:
+  buyer_id: "swarm-buyer-001"
+  # Stop buying when balance drops below this
+  min_balance: 1.00
+
+reporter:
+  # Output format: json, csv, or table
+  output_format: "table"
+  # Save transaction log to file
+  log_file: "swarm_transactions.jsonl"

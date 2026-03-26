@@ -1,0 +1,286 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ t('about.page_title') if t else 'About — AgenticTrade' }}{% endblock %}
+{% block meta_description %}{{ t('about.meta_desc') if t else 'AgenticTrade is built by JudyAI Lab. We\'re building the infrastructure for agent-to-agent commerce — where AI agents discover, call, and pay for API services autonomously.' }}{% endblock %}
+{% block og_title %}{{ t('about.page_title') if t else 'About — AgenticTrade' }}{% endblock %}
+{% block og_description %}{{ t('about.meta_desc') if t else 'AgenticTrade: the API marketplace built for AI agents. Built by JudyAI Lab.' }}{% endblock %}
+{% block tw_title %}{{ t('about.page_title') if t else 'About — AgenticTrade' }}{% endblock %}
+{% block tw_description %}{{ t('about.meta_desc') if t else 'AgenticTrade: the API marketplace built for AI agents. Built by JudyAI Lab.' }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About AgenticTrade",
+    "description": "AgenticTrade is an API marketplace where AI agents discover, call, and pay for services autonomously.",
+    "mainEntity": {
+        "@type": "Organization",
+        "name": "AgenticTrade",
+        "url": "https://agentictrade.io",
+        "foundingDate": "2025",
+        "parentOrganization": {
+            "@type": "Organization",
+            "name": "JudyAI Lab",
+            "url": "https://judyailab.com"
+        },
+        "knowsAbout": [
+            "Agent Commerce",
+            "Model Context Protocol (MCP)",
+            "API Marketplaces",
+            "x402 Payment Protocol",
+            "AI Agent Infrastructure"
+        ]
+    },
+    "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://agentictrade.io/"},
+            {"@type": "ListItem", "position": 2, "name": "About", "item": "https://agentictrade.io/about"}
+        ]
+    }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero { padding: 60px 0 40px; max-width: 700px; }
+    .about-hero p { color: var(--text-dim); font-size: 18px; line-height: 1.8; margin-bottom: 20px; }
+
+    .mission-section { margin: 48px 0; }
+    .mission-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 700px;
+        box-shadow: var(--ring);
+    }
+    .mission-card blockquote {
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--text);
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin-bottom: 16px;
+    }
+    .mission-card p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin: 48px 0;
+    }
+    .tech-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: var(--ring);
+    }
+    .tech-card h3 { margin-bottom: 8px; color: var(--accent); }
+    .tech-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 0; }
+
+    .trust-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin: 48px 0;
+    }
+    .trust-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 20px;
+        background: var(--bg-card);
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--ring);
+    }
+    .trust-icon { font-size: 24px; flex-shrink: 0; }
+    .trust-item h3 { margin-bottom: 4px; font-size: 15px; }
+    .trust-item p { color: var(--text-dim); font-size: 14px; margin-bottom: 0; }
+
+    .founder-section { margin: 48px 0; }
+    .founder-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 700px;
+        box-shadow: var(--ring);
+    }
+    .founder-card h3 { color: var(--accent); margin-bottom: 4px; }
+    .founder-card .founder-role { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; }
+    .founder-card p { color: var(--text-dim); font-size: 15px; line-height: 1.8; margin-bottom: 12px; }
+    .founder-card p:last-child { margin-bottom: 0; }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin: 32px 0;
+    }
+    .contact-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: var(--ring);
+    }
+    .contact-card h4 { margin-bottom: 4px; font-size: 14px; color: var(--text); }
+    .contact-card a { color: var(--accent); font-size: 14px; text-decoration: none; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+        .tech-grid { grid-template-columns: 1fr; }
+        .trust-grid { grid-template-columns: 1fr; }
+        .contact-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container" style="padding-top:16px;">
+    <nav aria-label="Breadcrumb" style="font-size:13px; color:var(--text-muted);">
+        <a href="/" style="color:var(--text-dim);">{{ t('breadcrumb.home') if t else 'Home' }}</a> &rsaquo; {{ t('breadcrumb.about') if t else 'About' }}
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{# About Hero #}
+<section class="section">
+    <div class="container">
+        <div class="about-hero">
+            <span class="eyebrow">{{ t('footer.about') if t else 'About' }}</span>
+            <h1>{{ t('about.title') if t else 'About AgenticTrade' }}</h1>
+            <p>{{ t('about.hero_p1') if t else 'The web was built for humans. Humans browse websites, read documentation, enter credit card numbers, and manage API keys manually. But AI agents don\'t browse. They query, evaluate, call, and pay &mdash; programmatically.' }}</p>
+            <p>{{ t('about.hero_p2') if t else 'AgenticTrade is the infrastructure that makes this possible. We\'re building the API marketplace where agents are the customers, not just the tools.' }}</p>
+        </div>
+
+        {# Mission #}
+        <div class="mission-section">
+            <span class="eyebrow">{{ t('about.mission_eyebrow') if t else 'Mission' }}</span>
+            <h2 class="mb-24">{{ t('about.mission_title') if t else 'Our Mission' }}</h2>
+            <div class="mission-card">
+                <blockquote>{{ t('about.mission_quote') if t else 'Enable autonomous AI agents to discover, consume, and pay for services without human intervention.' }}</blockquote>
+                <p>{{ t('about.mission_desc') if t else 'Every API should be accessible to every agent. Every provider should earn from agent traffic. Every payment should settle automatically. That\'s the economy we\'re building.' }}</p>
+            </div>
+        </div>
+
+        {# Technical Foundation #}
+        <span class="eyebrow">{{ t('about.tech_eyebrow') if t else 'Technology' }}</span>
+        <h2 class="mb-8">{{ t('about.tech_title') if t else 'Technical Foundation' }}</h2>
+        <p class="section-subtitle">{{ t('about.tech_subtitle') if t else 'Built on open protocols. No vendor lock-in.' }}</p>
+
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h3>{{ t('about.tech_mcp_title') if t else 'Model Context Protocol (MCP)' }}</h3>
+                <p>{{ t('about.tech_mcp_desc') if t else '<strong>MCP Tool Descriptors</strong> give AI agents machine-readable API documentation. No human-facing docs to maintain &mdash; agents understand capabilities, parameters, and pricing directly.' }}</p>
+            </div>
+            <div class="tech-card">
+                <h3>{{ t('about.tech_x402_title') if t else 'x402 Payment Protocol' }}</h3>
+                <p>{{ t('about.tech_x402_desc') if t else 'HTTP-native micropayments in USDC on Base. Agents pay per API call with the <strong>x402</strong> protocol &mdash; no subscriptions, no invoices, no billing support. Payments happen at HTTP speed.' }}</p>
+            </div>
+            <div class="tech-card">
+                <h3>{{ t('about.tech_proxy_title') if t else 'Proxy Key Infrastructure' }}</h3>
+                <p>{{ t('about.tech_proxy_desc') if t else '<strong>Proxy Keys</strong> route requests through AgenticTrade without exposing provider credentials. Providers can rotate real keys anytime. Consuming agents never see the original credentials.' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Trust Signals #}
+<section class="section section-alt">
+    <div class="container">
+        <span class="eyebrow">{{ t('about.security_eyebrow') if t else 'Security' }}</span>
+        <h2 class="mb-8">{{ t('about.trust_title') if t else 'Trust &amp; Security' }}</h2>
+        <p class="section-subtitle">{{ t('about.trust_subtitle') if t else 'Your API keys, your revenue, your data &mdash; protected.' }}</p>
+
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">&#x1F512;</div>
+                <div>
+                    <h3>{{ t('about.trust_proxy_title') if t else 'Proxy Key Isolation' }}</h3>
+                    <p>{{ t('about.trust_proxy_desc') if t else 'Provider API keys are stored encrypted and never transmitted to consuming agents. All requests route through our infrastructure.' }}</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">&#x1F4B0;</div>
+                <div>
+                    <h3>{{ t('about.trust_onchain_title') if t else 'On-Chain Payments' }}</h3>
+                    <p>{{ t('about.trust_onchain_desc') if t else 'USDC payments on Base (Ethereum L2) are verifiable on-chain. Every transaction is auditable. No payment disputes.' }}</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">&#x1F6E1;</div>
+                <div>
+                    <h3>{{ t('about.trust_ssrf_title') if t else 'SSRF Protection' }}</h3>
+                    <p>{{ t('about.trust_ssrf_desc') if t else 'The proxy validates all outbound requests against SSRF attacks. Internal networks, localhost, and private IPs are blocked by default.' }}</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">&#x1F4CA;</div>
+                <div>
+                    <h3>{{ t('about.trust_ratelimit_title') if t else 'Rate Limiting' }}</h3>
+                    <p>{{ t('about.trust_ratelimit_desc') if t else 'Per-client rate limiting (60 requests/minute default, 300 burst) protects both the platform and individual provider APIs.' }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{# Founder & Team #}
+<section class="section">
+    <div class="container">
+        <span class="eyebrow">{{ t('about.team_eyebrow') if t else 'Team' }}</span>
+        <h2 class="mb-24">{{ t('about.team_title') if t else 'The Story Behind AgenticTrade' }}</h2>
+
+        <div class="founder-section">
+            <div class="founder-card">
+                <h3>Judy Wang</h3>
+                <div class="founder-role">{{ t('about.founder_role') if t else 'Founder, JudyAI Lab' }}</div>
+                <p>{{ t('about.founder_p1') if t else 'It started with ChatGPT. What began as curiosity quickly became obsession &mdash; the realization that AI isn\'t just a tool, but a collaborator you can build a genuine working relationship with.' }}</p>
+                <p>{{ t('about.founder_p2') if t else 'That obsession led to building an entire AI team: agents powered by different models &mdash; Claude, Gemini, MiniMax &mdash; each with distinct strengths, personalities, and roles. Not replacing humans, but working alongside them as a real team.' }}</p>
+                <p>{{ t('about.founder_p3') if t else 'The next question was inevitable: if AI agents can work as a team, they should be able to trade with each other. Buy and sell services. Discover APIs. Pay autonomously. That\'s how AgenticTrade was born &mdash; a marketplace where agents are the customers, not just the tools.' }}</p>
+                <p>{{ t('about.founder_p4') if t else 'Today, JudyAI Lab is building the infrastructure for agent-to-agent commerce. We believe the future economy will have AI agents as active participants &mdash; discovering services, negotiating prices, and settling payments at machine speed.' }}</p>
+            </div>
+        </div>
+
+        {# Contact Info #}
+        <span class="eyebrow">{{ t('about.contact_eyebrow') if t else 'Contact' }}</span>
+        <h2 class="mb-8">{{ t('about.contact_title') if t else 'Get in Touch' }}</h2>
+        <p class="section-subtitle">{{ t('about.contact_subtitle') if t else 'Whether you\'re a developer, a provider, or just curious about agent commerce.' }}</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h4>{{ t('about.contact_general') if t else 'General Inquiries' }}</h4>
+                <a href="mailto:hello@agentictrade.io">hello@agentictrade.io</a>
+            </div>
+            <div class="contact-card">
+                <h4>{{ t('about.contact_support') if t else 'Technical Support' }}</h4>
+                <a href="mailto:support@agentictrade.io">support@agentictrade.io</a>
+            </div>
+            <div class="contact-card">
+                <h4>{{ t('about.contact_partners') if t else 'Partnerships & Providers' }}</h4>
+                <a href="mailto:partners@agentictrade.io">partners@agentictrade.io</a>
+            </div>
+            <div class="contact-card">
+                <h4>{{ t('about.contact_company') if t else 'Company' }}</h4>
+                <a href="https://judyailab.com" target="_blank" rel="noopener">JudyAI Lab</a>
+            </div>
+        </div>
+
+        <div class="text-center" style="padding:48px 0 0;">
+            <a href="/api-docs#quickstart" class="btn-primary">{{ t('about.get_started') if t else 'Get Started' }}</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

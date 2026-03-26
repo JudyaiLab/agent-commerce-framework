@@ -1,0 +1,48 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.agentictrade/marketplace",
+  "title": "AgenticTrade Marketplace",
+  "description": "MCP server for AI agent commerce — discover, purchase, and consume API services with autonomous payments via x402 USDC on Base, PayPal, and 300+ cryptocurrencies.",
+  "version": "0.1.0",
+  "websiteUrl": "https://agentictrade.io",
+  "repository": {
+    "url": "https://github.com/judyailab/agentictrade-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "agentictrade-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "AGENTICTRADE_API_KEY",
+          "description": "Your AgenticTrade API key (format: key_id:secret) for marketplace access",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "AGENTICTRADE_BASE_URL",
+          "description": "Base URL of the AgenticTrade marketplace API",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "AGENTICTRADE_BUYER_ID",
+          "description": "Your buyer/agent ID for balance queries",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://agentictrade.io/api/v1/mcp"
+    }
+  ]
+}

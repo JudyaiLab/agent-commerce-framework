@@ -1,0 +1,93 @@
+{% extends "portal/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 32px;">
+    <h1 style="font-size: 24px; font-weight: 700; color: var(--text-bright);">Welcome back, {{ provider.display_name }}</h1>
+    <p style="font-size: 14px; color: var(--text-dim); margin-top: 4px;">Here's your API business overview.</p>
+</div>
+
+{# ── Stats Grid ── #}
+<div class="portal-grid">
+    <div class="portal-card portal-stat">
+        <div class="portal-stat-value">{{ stats.service_count }}</div>
+        <div class="portal-stat-label">Active Services</div>
+    </div>
+    <div class="portal-card portal-stat">
+        <div class="portal-stat-value">{{ "{:,}".format(stats.total_calls) }}</div>
+        <div class="portal-stat-label">Total API Calls</div>
+    </div>
+    <div class="portal-card portal-stat">
+        <div class="portal-stat-value">${{ "%.2f"|format(stats.total_revenue) }}</div>
+        <div class="portal-stat-label">Total Revenue</div>
+    </div>
+    <div class="portal-card portal-stat">
+        <div class="portal-stat-value">${{ "%.2f"|format(stats.pending_settlement) }}</div>
+        <div class="portal-stat-label">Pending Settlement</div>
+    </div>
+</div>
+
+{# ── Quick Actions ── #}
+<div class="portal-card" style="margin-bottom: 32px;">
+    <h2 style="font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 16px;">Quick Actions</h2>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="/portal/services" class="btn-primary" style="font-size: 14px; padding: 10px 20px; text-decoration: none;">Manage Services</a>
+        <a href="/portal/analytics" class="btn-secondary" style="font-size: 14px; padding: 10px 20px; text-decoration: none;">View Analytics</a>
+        <a href="/api-docs" class="btn-secondary" style="font-size: 14px; padding: 10px 20px; text-decoration: none;" target="_blank">API Docs</a>
+    </div>
+</div>
+
+{# ── Services Overview ── #}
+<div class="portal-card">
+    <h2 style="font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 16px;">Your Services</h2>
+
+    {% if stats.services %}
+    <div class="portal-table-wrap">
+    <table class="portal-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price/Call</th>
+                <th>Calls</th>
+                <th>Revenue</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for svc in stats.services %}
+            <tr>
+                <td style="color: var(--text-bright); font-weight: 500;">{{ svc.name }}</td>
+                <td>${{ "%.4f"|format(svc.price_per_call) }}</td>
+                <td>{{ "{:,}".format(svc.call_count) }}</td>
+                <td>${{ "%.2f"|format(svc.revenue) }}</td>
+                <td>
+                    <span class="portal-badge {% if svc.status == 'active' %}portal-badge-active{% else %}portal-badge-inactive{% endif %}">
+                        {{ svc.status }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div class="portal-empty">
+        <p style="font-size: 16px; margin-bottom: 8px;">No services listed yet</p>
+        <p style="font-size: 14px;">Use the API to register your first service, or check the <a href="/api-docs" style="color: var(--accent);">API documentation</a>.</p>
+    </div>
+    {% endif %}
+</div>
+
+{# ── Getting Started ── #}
+{% if stats.service_count == 0 %}
+<div class="portal-card" style="background: rgba(99,102,241,0.05);">
+    <h2 style="font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 12px;">Getting Started</h2>
+    <ol style="padding-left: 20px; color: var(--text-dim); font-size: 14px; line-height: 2;">
+        <li>Prepare your API endpoint (must be publicly accessible)</li>
+        <li>Register it via <code style="color: var(--accent);">POST /api/v1/services</code> with your API key</li>
+        <li>AI agents worldwide discover and call your API automatically</li>
+        <li>Track revenue and settlements here in your dashboard</li>
+    </ol>
+</div>
+{% endif %}
+{% endblock %}

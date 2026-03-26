@@ -1,0 +1,238 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ t('marketplace.title') if t else 'Marketplace — AgenticTrade AI Agent Marketplace' }}{% endblock %}
+{% block meta_description %}{{ t('marketplace.meta_desc') if t else 'Browse and discover API services for AI agents. Search by category, compare pricing, and integrate with a single API call. Pre-paid USDC balance, per-call billing.' }}{% endblock %}
+{% block og_title %}{{ t('marketplace.title') if t else 'Marketplace — AgenticTrade AI Agent Marketplace' }}{% endblock %}
+{% block og_description %}{{ t('marketplace.meta_desc') if t else 'Browse API services for AI agents. Crypto, AI, Data, Code tools — per-call billing in USDC.' }}{% endblock %}
+{% block tw_title %}{{ t('marketplace.title') if t else 'Marketplace — AgenticTrade AI Agent Marketplace' }}{% endblock %}
+{% block tw_description %}{{ t('marketplace.meta_desc') if t else 'Browse API services for AI agents. Per-call billing in USDC.' }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "AgenticTrade Marketplace",
+    "description": "Browse and discover API services for AI agents. Search by category, compare pricing, and integrate with a single API call.",
+    "url": "https://agentictrade.io/marketplace",
+    "mainEntity": {
+        "@type": "ItemList",
+        "name": "Available API Services",
+        "numberOfItems": {{ service_count }},
+        "itemListElement": [
+            {% for svc in services %}
+            {
+                "@type": "ListItem",
+                "position": {{ loop.index }},
+                "name": "{{ svc.name }}",
+                "url": "https://agentictrade.io/api-docs#services"
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    },
+    "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://agentictrade.io/"},
+            {"@type": "ListItem", "position": 2, "name": "Marketplace", "item": "https://agentictrade.io/marketplace"}
+        ]
+    }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/marketplace.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+<div style="max-width:1400px; margin:0 auto; padding:16px 32px 0;">
+    <nav aria-label="Breadcrumb" style="font-size:13px; color:var(--text-muted);">
+        <a href="/" style="color:var(--text-dim);">{{ t('breadcrumb.home') if t else 'Home' }}</a> &rsaquo; {{ t('nav.marketplace') if t else 'Marketplace' }}
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="stars"></div>
+
+{# Hero #}
+<section class="mp-hero">
+    <div class="mp-hero-text">
+        <h1>{{ t('marketplace.hero_title_1') if t else 'UNLEASH AI POTENTIAL.' }}<br><span class="grad">{{ t('marketplace.hero_title_2') if t else 'TRADE SERVICES.' }}</span></h1>
+        <p>{{ t('marketplace.hero_desc') if t else 'A marketplace for autonomous agents to discover, buy, and sell capabilities. Pre-paid USDC balance. Per-call billing. No SDK required.' }}</p>
+    </div>
+    <div class="mp-hero-visual">
+        <div class="hero-orb orb1"></div>
+        <div class="hero-orb orb2"></div>
+        <div class="hero-orb orb3"></div>
+        <div class="hero-node node1">&#x1F916;</div>
+        <div class="hero-node node2">&#x26A1;</div>
+        <div class="hero-node node3">&#x1F4B0;</div>
+        <div class="hero-node node4">&#x1F50D;</div>
+        <div class="hero-line line1"></div>
+        <div class="hero-line line2"></div>
+    </div>
+</section>
+
+{# Early Access Banner #}
+<div style="max-width:1400px; margin:0 auto; padding:8px 32px 0;">
+    <div style="background:linear-gradient(135deg, rgba(34,211,238,0.08), rgba(167,139,250,0.08)); border:1px solid rgba(34,211,238,0.2); border-radius:10px; padding:12px 20px; font-size:14px; color:var(--text-dim); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span style="font-size:16px;" aria-hidden="true">&#x1F680;</span>
+        {{ t('marketplace.early_access_banner') if t else 'AgenticTrade is in Early Access. New providers are joining weekly.' }}
+        <a href="/providers" style="color:var(--accent); font-weight:600; margin-left:4px;">{{ t('marketplace.early_access_cta') if t else 'List your API' }} &rarr;</a>
+    </div>
+</div>
+
+{# Search #}
+<div class="mp-search-section">
+    <div class="search-row">
+        <div class="search-box">
+            <span class="search-icon">&#x1F50E;</span>
+            <input type="text" placeholder="{{ t('marketplace.search_placeholder') if t else 'Search services (e.g., Crypto Analysis, Code Review, Data Processing)...' }}" id="searchInput">
+        </div>
+        <div class="filter-tags">
+            <span class="filter-tag active" data-filter="all">{{ t('marketplace.filter_all') if t else 'All' }}</span>
+            <span class="filter-tag" data-filter="crypto">{{ t('marketplace.filter_crypto') if t else 'Crypto' }}</span>
+            <span class="filter-tag" data-filter="ai">{{ t('marketplace.filter_ai') if t else 'AI' }}</span>
+            <span class="filter-tag" data-filter="data">{{ t('marketplace.filter_data') if t else 'Data' }}</span>
+            <span class="filter-tag" data-filter="code">{{ t('marketplace.filter_code') if t else 'Code' }}</span>
+        </div>
+    </div>
+</div>
+
+{# Main: Sidebar + Grid #}
+<div class="mp-main-layout">
+
+    {# Sidebar #}
+    <aside class="mp-sidebar">
+        <div class="mp-sidebar-card">
+            <div class="mp-sidebar-title">{{ t('marketplace.sidebar_active_services') if t else 'Active Services' }}</div>
+            <div class="stat-big">{{ service_count }}</div>
+            <div class="stat-sub">{{ t('marketplace.sidebar_available') if t else 'Available on marketplace' }}</div>
+        </div>
+        <div class="mp-sidebar-card">
+            <div class="mp-sidebar-title">{{ t('marketplace.sidebar_top_categories') if t else 'Top Categories' }}</div>
+            <div class="mini-bars">
+                <div class="mini-bar-row">
+                    <span class="mini-bar-label">Crypto</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill bar-cyan" style="width:85%"></div></div>
+                </div>
+                <div class="mini-bar-row">
+                    <span class="mini-bar-label">AI</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill bar-purple" style="width:60%"></div></div>
+                </div>
+                <div class="mini-bar-row">
+                    <span class="mini-bar-label">Data</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill bar-green" style="width:40%"></div></div>
+                </div>
+                <div class="mini-bar-row">
+                    <span class="mini-bar-label">Code</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill bar-pink" style="width:25%"></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="mp-sidebar-card">
+            <div class="mp-sidebar-title">{{ t('marketplace.sidebar_api_calls') if t else 'API Calls' }}</div>
+            <div class="stat-big">{{ total_calls }}</div>
+            <div class="stat-sub">{{ t('marketplace.sidebar_processed') if t else 'Processed to date' }}</div>
+        </div>
+        <div class="mp-sidebar-card">
+            <div class="mp-sidebar-title">{{ t('marketplace.sidebar_agents') if t else 'Agents' }}</div>
+            <div class="stat-big">{{ agent_count }}</div>
+            <div class="stat-sub">{{ t('marketplace.sidebar_registered') if t else 'Registered on platform' }}</div>
+        </div>
+    </aside>
+
+    {# Service Grid #}
+    <div class="service-grid">
+        {% for svc in services %}
+        <div class="svc-card" data-name="{{ svc.name|lower }}" data-cat="{% if 'coin' in svc.name|lower or 'crypto' in svc.name|lower or 'backtest' in svc.name|lower or 'trading' in svc.name|lower or 'market' in svc.name|lower %}crypto{% elif 'ai' in svc.name|lower or 'sentiment' in svc.name|lower or 'summariz' in svc.description|lower %}ai{% elif 'data' in svc.name|lower or 'analys' in svc.name|lower %}data{% elif 'code' in svc.name|lower or 'review' in svc.name|lower %}code{% else %}other{% endif %}">
+            <div class="svc-header">
+                <div class="svc-icon {% if 'coin' in svc.name|lower or 'crypto' in svc.name|lower or 'backtest' in svc.name|lower or 'trading' in svc.name|lower or 'market' in svc.name|lower %}svc-icon-crypto{% elif 'ai' in svc.name|lower or 'sentiment' in svc.name|lower %}svc-icon-ai{% elif 'data' in svc.name|lower or 'analys' in svc.name|lower %}svc-icon-data{% elif 'code' in svc.name|lower or 'review' in svc.name|lower %}svc-icon-code{% else %}svc-icon-default{% endif %}">
+                    {% if 'coin' in svc.name|lower or 'crypto' in svc.name|lower or 'backtest' in svc.name|lower or 'trading' in svc.name|lower or 'market' in svc.name|lower %}&#x1F4B0;{% elif 'ai' in svc.name|lower or 'sentiment' in svc.name|lower %}&#x1F916;{% elif 'data' in svc.name|lower or 'analys' in svc.name|lower %}&#x1F4CA;{% elif 'code' in svc.name|lower or 'review' in svc.name|lower %}&#x1F4BB;{% else %}&#x26A1;{% endif %}
+                </div>
+                <div>
+                    <div class="svc-name">{{ svc.name }}</div>
+                    <div class="svc-desc">{{ svc.description }}</div>
+                </div>
+            </div>
+            <div class="svc-price">
+                <span class="amount">${{ svc.price_per_call }}</span>
+                <span class="currency"> USDC</span>
+            </div>
+            <div class="svc-meta">
+                {% if svc.free_tier_calls > 0 %}
+                <span class="svc-free">{{ svc.free_tier_calls }} {{ t('marketplace.free_calls') if t else 'free calls' }}</span>
+                {% else %}
+                <span></span>
+                {% endif %}
+                <a href="/api-docs#services" class="svc-btn">{{ t('marketplace.view_details') if t else 'View Details' }}</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if services|length == 0 %}
+        <div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">
+            <div style="font-size: 48px; margin-bottom: 16px;">&#x1F6E0;</div>
+            <p>{{ t('marketplace.empty_title') if t else 'No services listed yet. Be the first to register one!' }}</p>
+            <a href="/api-docs#services" class="svc-btn" style="margin-top: 16px;">{{ t('marketplace.empty_cta') if t else 'Register a Service' }}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{# Code Example #}
+<section class="mp-code-section">
+    <h2><span class="grad">{{ t('marketplace.code_title') if t else 'Simple Integration' }}</span></h2>
+    <p class="mp-code-subtitle">{{ t('marketplace.code_subtitle') if t else 'Call any marketplace service with a single HTTP request' }}</p>
+    <div class="mp-code-block">
+<code><span class="cmt"># Call a marketplace service</span>
+<span class="kw">import</span> httpx
+
+client = httpx.Client()
+resp = client.post(
+    <span class="str">f"https://agentictrade.io/api/v1/proxy/{service_id}/api/scan"</span>,
+    headers={<span class="str">"Authorization"</span>: <span class="str">f"Bearer {key_id}:{secret}"</span>},
+    json={<span class="str">"indicators"</span>: [<span class="str">"rsi"</span>, <span class="str">"macd"</span>]},
+)
+
+<span class="cmt"># Billing is automatic — balance deducted per call</span>
+<span class="fn">print</span>(resp.headers[<span class="str">"X-ACF-Amount"</span>])      <span class="cmt"># "0.50"</span>
+<span class="fn">print</span>(resp.headers[<span class="str">"X-ACF-Free-Tier"</span>])   <span class="cmt"># "false"</span></code>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter tags
+document.querySelectorAll('.filter-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.svc-card').forEach(card => {
+            if (filter === 'all' || card.dataset.cat === filter) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.svc-card').forEach(card => {
+        card.style.display = card.dataset.name.includes(q) ? '' : 'none';
+    });
+    // Reset filter to All
+    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+    document.querySelector('.filter-tag[data-filter="all"]').classList.add('active');
+});
+</script>
+{% endblock %}

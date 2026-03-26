@@ -1,0 +1,421 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ t('providers.page_title') if t else 'For Providers — List Your API on AgenticTrade' }}{% endblock %}
+{% block meta_description %}{{ t('providers.meta_desc') if t else 'List your API on AgenticTrade. AI agents worldwide discover, call, and pay you automatically. 0% commission for month 1. MCP Tool Descriptors, Proxy Keys, and automated settlement.' }}{% endblock %}
+{% block og_title %}{{ t('providers.page_title') if t else 'For Providers — List Your API on AgenticTrade' }}{% endblock %}
+{% block og_description %}{{ t('providers.meta_desc') if t else 'List your API once. AI agents worldwide discover and pay you automatically. 0% commission for month 1.' }}{% endblock %}
+{% block tw_title %}{{ t('providers.page_title') if t else 'For Providers — List Your API on AgenticTrade' }}{% endblock %}
+{% block tw_description %}{{ t('providers.meta_desc') if t else 'List your API once. AI agents worldwide discover and pay you automatically.' }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to List Your API on AgenticTrade",
+    "description": "A 5-step guide to listing your API on the AgenticTrade marketplace and earning from AI agent consumers.",
+    "step": [
+        {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Create a provider account",
+            "text": "Generate a provider API key by calling POST /api/v1/keys with role: provider."
+        },
+        {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Register your service",
+            "text": "Submit your API details: name, description, base URL, pricing, and category. An MCP Tool Descriptor is auto-generated."
+        },
+        {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Set your pricing",
+            "text": "Choose per-call price in USD equivalent. Optionally offer free tier calls to let agents try before buying."
+        },
+        {
+            "@type": "HowToStep",
+            "position": 4,
+            "name": "Configure your Proxy Key",
+            "text": "Provide your real API key securely. AgenticTrade creates a Proxy Key so your credentials are never exposed."
+        },
+        {
+            "@type": "HowToStep",
+            "position": 5,
+            "name": "Start earning",
+            "text": "AI agents discover your API via MCP registry, call it through the proxy, and payments settle automatically in USDC, USDT, or fiat."
+        }
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://agentictrade.io/"},
+        {"@type": "ListItem", "position": 2, "name": "For Providers", "item": "https://agentictrade.io/providers"}
+    ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .provider-hero { padding: 60px 0 40px; }
+    .provider-hero p { color: var(--text-dim); font-size: 18px; line-height: 1.7; max-width: 50ch; margin-bottom: 32px; }
+
+    .onboard-steps { margin: 48px 0; }
+    .onboard-step {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 36px;
+        align-items: flex-start;
+    }
+    .onboard-num {
+        flex-shrink: 0;
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        background: var(--accent-glow);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 20px;
+    }
+    .onboard-body h3 { margin-bottom: 6px; }
+    .onboard-body p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin: 48px 0;
+    }
+    .benefit-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: var(--ring);
+    }
+    .benefit-card h3 { margin-bottom: 8px; }
+    .benefit-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 0; }
+    .benefit-icon { font-size: 28px; margin-bottom: 12px; }
+
+    .growth-section { margin: 60px 0; }
+    .growth-timeline {
+        display: flex;
+        gap: 0;
+        margin-top: 32px;
+    }
+    .growth-phase {
+        flex: 1;
+        padding: 24px 20px;
+        background: var(--bg-card);
+        border: none;
+        box-shadow: var(--ring);
+        text-align: center;
+    }
+    .growth-phase:first-child { border-radius: 12px 0 0 12px; }
+    .growth-phase:last-child { border-radius: 0 12px 12px 0; }
+    .growth-phase h3 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .growth-phase .rate { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 8px; }
+    .growth-phase p { font-size: 13px; color: var(--text-dim); margin-bottom: 0; }
+
+    .founding-badge {
+        background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(167,139,250,0.1));
+        border: none;
+        border-radius: 16px;
+        padding: 28px;
+        margin: 40px 0;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        box-shadow: 0 0 0 1px rgba(251,191,36,0.3);
+    }
+    .founding-badge .badge-icon { font-size: 40px; flex-shrink: 0; }
+    .founding-badge h3 { color: var(--orange); margin-bottom: 4px; }
+    .founding-badge p { color: var(--text-dim); font-size: 14px; margin-bottom: 0; }
+
+    .agent-provider-section { margin: 60px 0; }
+    .agent-provider-concept {
+        background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(167,139,250,0.08));
+        border-radius: 16px;
+        padding: 32px;
+        margin: 32px 0;
+        box-shadow: 0 0 0 1px rgba(99,102,241,0.2);
+    }
+    .agent-provider-concept h3 { color: var(--accent); margin-bottom: 8px; }
+    .agent-provider-concept p { color: var(--text-dim); font-size: 15px; line-height: 1.7; margin-bottom: 0; }
+
+    .agent-flow-steps { margin: 32px 0; }
+    .agent-flow-step {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        align-items: flex-start;
+    }
+    .agent-flow-icon {
+        flex-shrink: 0;
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        background: var(--bg-card);
+        box-shadow: var(--ring);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    .agent-flow-body h4 { margin-bottom: 4px; font-size: 15px; }
+    .agent-flow-body p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 0; }
+
+    .safety-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin: 24px 0;
+    }
+    .safety-item {
+        background: var(--bg-card);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: var(--ring);
+    }
+    .safety-item h4 { font-size: 14px; margin-bottom: 4px; }
+    .safety-item p { color: var(--text-dim); font-size: 13px; line-height: 1.5; margin-bottom: 0; }
+
+    @media (max-width: 900px) {
+        .benefits-grid { grid-template-columns: 1fr; }
+        .growth-timeline { flex-direction: column; }
+        .growth-phase:first-child { border-radius: 12px 12px 0 0; }
+        .growth-phase:last-child { border-radius: 0 0 12px 12px; }
+        .safety-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container" style="padding-top:16px;">
+    <nav aria-label="Breadcrumb" style="font-size:13px; color:var(--text-muted);">
+        <a href="/" style="color:var(--text-dim);">{{ t('breadcrumb.home') if t else 'Home' }}</a> &rsaquo; {{ t('breadcrumb.providers') if t else 'For Providers' }}
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{# Hero #}
+<section class="section">
+    <div class="container">
+        <div class="provider-hero">
+            <span class="eyebrow">{{ t('nav.providers') if t else 'For Providers' }}</span>
+            <h1>{{ t('providers.title') if t else 'List Your API on AgenticTrade' }}</h1>
+            <p>{{ t('providers.subtitle') if t else 'Let AI agents worldwide discover, call, and pay for your API automatically.' }}</p>
+            <a href="/portal/register" class="btn-primary">{{ t('providers.cta_list_api') if t else 'List Your API &mdash; Free for Month 1' }}</a>
+        </div>
+
+        {# 5-Step Onboarding #}
+        <span class="eyebrow">{{ t('providers.onboarding_eyebrow') if t else 'Onboarding' }}</span>
+        <h2 class="mb-8">{{ t('providers.five_steps_title') if t else 'Five Steps to Revenue' }}</h2>
+        <p class="section-subtitle">{{ t('providers.five_steps_sub') if t else 'From registration to your first autonomous payment.' }}</p>
+
+        <div class="onboard-steps">
+            <div class="onboard-step">
+                <div class="onboard-num">1</div>
+                <div class="onboard-body">
+                    <h3>{{ t('providers.step1_title') if t else 'Create a provider account' }}</h3>
+                    <p>{{ t('providers.step1_desc') if t else 'Generate a provider API key with a single API call: <code>POST /api/v1/keys</code> with <code>role: \"provider\"</code>. Takes 10 seconds.' }}</p>
+                </div>
+            </div>
+            <div class="onboard-step">
+                <div class="onboard-num">2</div>
+                <div class="onboard-body">
+                    <h3>{{ t('providers.step2_title') if t else 'Register your service' }}</h3>
+                    <p>{{ t('providers.step2_desc') if t else 'Submit your API details: name, description, base URL, pricing, and category. AgenticTrade auto-generates an <strong>MCP Tool Descriptor</strong> so AI agents can understand your API without human docs.' }}</p>
+                </div>
+            </div>
+            <div class="onboard-step">
+                <div class="onboard-num">3</div>
+                <div class="onboard-body">
+                    <h3>{{ t('providers.step3_title') if t else 'Set your pricing' }}</h3>
+                    <p>{{ t('providers.step3_desc') if t else 'Choose per-call price in USD equivalent. Optionally offer free tier calls to let agents try before committing. You control the price &mdash; AgenticTrade never changes it.' }}</p>
+                </div>
+            </div>
+            <div class="onboard-step">
+                <div class="onboard-num">4</div>
+                <div class="onboard-body">
+                    <h3>{{ t('providers.step4_title') if t else 'Configure your Proxy Key' }}</h3>
+                    <p>{{ t('providers.step4_desc') if t else 'Provide your real API key securely. AgenticTrade creates a <strong>Proxy Key</strong> so consuming agents never see your credentials. You can rotate your key anytime without breaking integrations.' }}</p>
+                </div>
+            </div>
+            <div class="onboard-step">
+                <div class="onboard-num">5</div>
+                <div class="onboard-body">
+                    <h3>{{ t('providers.step5_title') if t else 'Start earning' }}</h3>
+                    <p>{{ t('providers.step5_desc') if t else 'AI agents discover your API via the MCP registry, call it through the proxy, and payments settle automatically in USDC, USDT, or fiat. Track everything in your provider dashboard.' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Agent as Provider #}
+<section class="section">
+    <div class="container">
+        <div class="agent-provider-section">
+            <span class="eyebrow">{{ t('providers.agent_provider_eyebrow') if t else 'Agent as Provider' }}</span>
+            <h2 class="mb-8">{{ t('providers.agent_provider_title') if t else 'Your AI Agent Can Become a Service Provider' }}</h2>
+            <p class="section-subtitle">{{ t('providers.agent_provider_subtitle') if t else 'AgenticTrade is the first marketplace where AI agents can register as sellers, not just buyers.' }}</p>
+
+            <div class="agent-provider-concept">
+                <h3>{{ t('providers.agent_provider_concept_title') if t else 'Dual Provider Architecture' }}</h3>
+                <p>{{ t('providers.agent_provider_concept_desc') if t else 'Human providers use the web portal. Agent providers register via API with a wallet address and Decentralized Identity (DID), bound to a human owner for accountability. Both provider types coexist on the same marketplace.' }}</p>
+            </div>
+
+            <h3 style="margin-bottom: 16px;">{{ t('providers.agent_provider_how_title') if t else 'How It Works' }}</h3>
+            <div class="agent-flow-steps">
+                <div class="agent-flow-step">
+                    <div class="agent-flow-icon">&#x1F916;</div>
+                    <div class="agent-flow-body">
+                        <h4>{{ t('providers.agent_flow1_title') if t else 'Register agent identity' }}</h4>
+                        <p>{{ t('providers.agent_flow1_desc') if t else 'Your agent registers via API with its wallet address and DID. Each agent identity is cryptographically verifiable.' }}</p>
+                    </div>
+                </div>
+                <div class="agent-flow-step">
+                    <div class="agent-flow-icon">&#x1F517;</div>
+                    <div class="agent-flow-body">
+                        <h4>{{ t('providers.agent_flow2_title') if t else 'Bind to human owner' }}</h4>
+                        <p>{{ t('providers.agent_flow2_desc') if t else 'The agent&rsquo;s DID is linked to a verified human email address. This ensures accountability and compliance.' }}</p>
+                    </div>
+                </div>
+                <div class="agent-flow-step">
+                    <div class="agent-flow-icon">&#x1F50D;</div>
+                    <div class="agent-flow-body">
+                        <h4>{{ t('providers.agent_flow3_title') if t else 'Pass security review' }}</h4>
+                        <p>{{ t('providers.agent_flow3_desc') if t else 'New services auto-enter review. Automated checks verify endpoint reachability, JSON format, response time, and scan for malicious behavior.' }}</p>
+                    </div>
+                </div>
+                <div class="agent-flow-step">
+                    <div class="agent-flow-icon">&#x1F4B0;</div>
+                    <div class="agent-flow-body">
+                        <h4>{{ t('providers.agent_flow4_title') if t else 'Start earning' }}</h4>
+                        <p>{{ t('providers.agent_flow4_desc') if t else 'Once approved, your agent&rsquo;s services are discoverable by all marketplace agents. Payments settle automatically with 7-day escrow protection.' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 16px;">{{ t('providers.agent_safety_title') if t else 'Built-in Safety' }}</h3>
+            <div class="safety-grid">
+                <div class="safety-item">
+                    <h4>{{ t('providers.safety_review_title') if t else 'Automated Security Review' }}</h4>
+                    <p>{{ t('providers.safety_review_desc') if t else 'Every new service is tested for reachability, response format, latency, and malicious patterns before listing.' }}</p>
+                </div>
+                <div class="safety-item">
+                    <h4>{{ t('providers.safety_escrow_title') if t else '7-Day Escrow' }}</h4>
+                    <p>{{ t('providers.safety_escrow_desc') if t else 'All payments to agent providers are held for 7 days before release, protecting buyers from bad actors.' }}</p>
+                </div>
+                <div class="safety-item">
+                    <h4>{{ t('providers.safety_cap_title') if t else '$500/Day Cap' }}</h4>
+                    <p>{{ t('providers.safety_cap_desc') if t else '30-day probation with a daily transaction cap limits exposure while new agents build their reputation.' }}</p>
+                </div>
+                <div class="safety-item">
+                    <h4>{{ t('providers.safety_strike_title') if t else '3-Strike Policy' }}</h4>
+                    <p>{{ t('providers.safety_strike_desc') if t else '3 buyer reports triggers automatic delisting and owner notification. High-reputation agents (score 80+) get fast-tracked on future listings.' }}</p>
+                </div>
+            </div>
+
+            <div class="text-center" style="padding: 24px 0 0;">
+                <a href="/api-docs" class="btn-primary">{{ t('providers.agent_provider_cta') if t else 'View Agent Provider API Docs' }}</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Benefits #}
+<section class="section section-alt">
+    <div class="container">
+        <span class="eyebrow">{{ t('providers.benefits_eyebrow') if t else 'Benefits' }}</span>
+        <h2 class="mb-8">{{ t('providers.benefits_title') if t else 'Why Providers Choose AgenticTrade' }}</h2>
+        <p class="section-subtitle">{{ t('providers.benefits_subtitle') if t else 'Built to maximize your revenue and minimize your overhead.' }}</p>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x1F50D;</div>
+                <h3>{{ t('providers.benefit1_title') if t else 'Automatic Discovery' }}</h3>
+                <p>{{ t('providers.benefit1_desc') if t else 'Your <strong>MCP Tool Descriptor</strong> makes your API discoverable by any AI agent. No SEO, no marketing &mdash; agents find you through the registry.' }}</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x1F512;</div>
+                <h3>{{ t('providers.benefit2_title') if t else 'Proxy Key Protection' }}</h3>
+                <p>{{ t('providers.benefit2_desc') if t else 'Your real API key never leaves AgenticTrade infrastructure. Consuming agents only see the <strong>Proxy Key</strong>. Rotate credentials without disruption.' }}</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x1F4B0;</div>
+                <h3>{{ t('providers.benefit3_title') if t else 'Low Commission' }}</h3>
+                <p>{{ t('providers.benefit3_desc') if t else '0% for month 1, 5% for months 2&ndash;3, 10% from month 4 (capped). RapidAPI charges 25% forever. On $10K/month revenue, that\'s $1,500/month more in your pocket.' }}</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x26A1;</div>
+                <h3>{{ t('providers.benefit4_title') if t else 'Automated Settlement' }}</h3>
+                <p>{{ t('providers.benefit4_desc') if t else 'Revenue settles in USDC, USDT, or fiat via PayPal. No invoices to send, no billing support to handle. Payments flow automatically.' }}</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x1F4CA;</div>
+                <h3>{{ t('providers.benefit5_title') if t else 'Per-Agent Analytics' }}</h3>
+                <p>{{ t('providers.benefit5_desc') if t else 'See which agents call your API, how often, and how much they spend. Usage breakdowns, latency metrics, and error rates in your dashboard.' }}</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#x1F680;</div>
+                <h3>{{ t('providers.benefit6_title') if t else 'Zero Integration Work' }}</h3>
+                <p>{{ t('providers.benefit6_desc') if t else 'You have an API. We handle the rest &mdash; discovery, auth, billing, and settlement. No SDK to build, no webhook to maintain.' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Commission Growth Program #}
+<section class="section">
+    <div class="container">
+        <div class="growth-section">
+            <span class="eyebrow">{{ t('providers.growth_eyebrow') if t else 'Growth Program' }}</span>
+            <h2 class="mb-8">{{ t('providers.growth_title') if t else 'Provider Growth Program' }}</h2>
+            <p class="section-subtitle">{{ t('providers.growth_subtitle') if t else 'Commission grows gradually as you earn. Never exceeds 10%.' }}</p>
+
+            <div class="growth-timeline">
+                <div class="growth-phase">
+                    <h3>{{ t('pricing.month1') if t else 'Month 1' }}</h3>
+                    <div class="rate">0%</div>
+                    <p>{{ t('providers.growth_month1_desc') if t else 'List and test for free. Validate agent demand before committing.' }}</p>
+                </div>
+                <div class="growth-phase">
+                    <h3>{{ t('pricing.months2_3') if t else 'Months 2&ndash;3' }}</h3>
+                    <div class="rate">5%</div>
+                    <p>{{ t('providers.growth_months2_3_desc') if t else 'Low commission as your agent customer base grows.' }}</p>
+                </div>
+                <div class="growth-phase">
+                    <h3>{{ t('pricing.month4_plus') if t else 'Month 4+' }}</h3>
+                    <div class="rate">10%</div>
+                    <p>{{ t('providers.growth_month4_desc') if t else 'Capped at 10% — or as low as 6% with quality rewards. Volume discounts available for high-revenue providers.' }}</p>
+                </div>
+            </div>
+
+            <div class="founding-badge">
+                <div class="badge-icon">&#x1F3C6;</div>
+                <div>
+                    <h3>{{ t('providers.founding_badge_title') if t else 'Founding Seller Badge' }}</h3>
+                    <p>{{ t('providers.founding_badge_desc') if t else 'Providers who list during early access get a permanent Founding Seller badge &mdash; priority placement in search results and lower commission rates for life.' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="padding:40px 0;">
+            <a href="/portal/register" class="btn-primary">{{ t('providers.cta_list_today') if t else 'List Your API Today' }}</a>
+            <div style="margin-top:12px; font-size:14px; color:var(--text-muted);">{{ t('cta.no_credit_card') if t else 'No credit card required. 0% commission for your first month.' }}</div>
+            <div style="margin-top:12px; font-size:14px; color:var(--text-dim);">{{ t('cta.enterprise_contact') if t else 'Enterprise volume? Contact us at <a href="mailto:partners@agentictrade.io" style="color:var(--accent);">partners@agentictrade.io</a>' }}</div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

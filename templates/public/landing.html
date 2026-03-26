@@ -1,0 +1,876 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ t('landing.page_title') if t else 'AgenticTrade — The API Marketplace Where Agents Pay, Not Humans' }}{% endblock %}
+{% block meta_description %}{{ t('landing.meta_desc') if t else 'AgenticTrade is an API marketplace built for AI agents. Providers list APIs and earn automatically. Builders integrate any API in minutes — agents handle discovery, auth, and billing.' }}{% endblock %}
+{% block og_title %}{{ t('landing.page_title') if t else 'AgenticTrade — The API Marketplace Where Agents Pay, Not Humans' }}{% endblock %}
+{% block og_description %}{{ t('landing.meta_desc') if t else 'List your API and let AI agents worldwide discover, call, and pay you automatically. Or build agents that pay their own bills.' }}{% endblock %}
+{% block tw_title %}{{ t('landing.page_title') if t else 'AgenticTrade — The API Marketplace Where Agents Pay, Not Humans' }}{% endblock %}
+{% block tw_description %}{{ t('landing.meta_desc') if t else 'List your API and let AI agents worldwide discover, call, and pay you automatically. Or build agents that pay their own bills.' }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AgenticTrade",
+    "url": "https://agentictrade.io",
+    "description": "The API marketplace where AI agents discover, call, and pay for services autonomously.",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://agentictrade.io/marketplace?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AgenticTrade",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "description": "An API marketplace that enables AI agent-to-agent commerce. Agents discover APIs via MCP Tool Descriptors, authenticate through Proxy Keys, and pay per call in USDC.",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free to start. 0% commission for the first month."
+    },
+    "featureList": [
+        "MCP Tool Descriptor auto-generation",
+        "Proxy Key authentication",
+        "Per-call micropayments in USDC",
+        "Agent-to-agent autonomous billing",
+        "Multi-provider payment support (x402, PayPal, NOWPayments)"
+    ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Landing-specific styles ── */
+
+    /* Hero */
+    .hero {
+        padding: 80px 0 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 48px;
+    }
+    .hero-text { max-width: 60%; }
+    .hero-text h1 { margin-bottom: 20px; }
+    .hero-text p {
+        font-size: 18px;
+        color: var(--text-dim);
+        line-height: 1.7;
+        margin-bottom: 32px;
+        max-width: 45ch;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+    .hero-stats {
+        display: flex;
+        gap: 40px;
+    }
+    .hero-stat-num {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--accent);
+    }
+    .hero-stat-label {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+    .hero-visual {
+        flex-shrink: 0;
+        width: 340px;
+        height: 260px;
+        position: relative;
+    }
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.6;
+        animation: orb-float 6s ease-in-out infinite;
+    }
+    .orb1 { width: 120px; height: 120px; top: 20px; right: 40px; background: radial-gradient(circle, rgba(34,211,238,0.3), transparent 70%); }
+    .orb2 { width: 90px; height: 90px; top: 80px; right: 160px; background: radial-gradient(circle, rgba(167,139,250,0.3), transparent 70%); animation-delay: 2s; }
+    .orb3 { width: 60px; height: 60px; top: 10px; right: 180px; background: radial-gradient(circle, rgba(52,211,153,0.3), transparent 70%); animation-delay: 4s; }
+    .hero-node {
+        position: absolute;
+        width: 44px; height: 44px;
+        background: var(--bg-card);
+        border: none;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .node1 { top: 30px; right: 60px; }
+    .node2 { top: 100px; right: 180px; }
+    .node3 { top: 170px; right: 90px; }
+    .hero-line {
+        position: absolute;
+        border-top: 1px dashed var(--border-light);
+        width: 80px;
+        transform-origin: left center;
+    }
+    .line1 { top: 52px; right: 104px; transform: rotate(30deg); width: 90px; }
+    .line2 { top: 130px; right: 130px; transform: rotate(-20deg); width: 70px; }
+    @keyframes orb-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+    }
+
+    /* Audience sections */
+    .audience-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .audience-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        padding: 36px;
+        box-shadow: var(--ring);
+    }
+    .audience-card h3 { color: var(--accent); margin-bottom: 16px; }
+    .audience-card p { color: var(--text-dim); line-height: 1.7; margin-bottom: 20px; }
+    .audience-card ul {
+        list-style: none;
+        padding: 0;
+    }
+    .audience-card li {
+        padding: 8px 0;
+        color: var(--text-dim);
+        font-size: 15px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .audience-card li:last-child { border-bottom: none; }
+    .audience-card li::before {
+        content: "\2713";
+        color: var(--green);
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    /* How it works */
+    .steps-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+    }
+    .steps-column h3 {
+        margin-bottom: 28px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--accent);
+        display: inline-block;
+    }
+    .step-item {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    .step-num {
+        flex-shrink: 0;
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: var(--accent-glow);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .step-content h4 { margin-bottom: 4px; }
+    .step-content p { color: var(--text-dim); font-size: 15px; margin-bottom: 0; }
+
+    /* Commission table */
+    .compare-wrap {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        max-width: 800px;
+        box-shadow: var(--ring);
+    }
+    .compare-wrap table { margin: 0; }
+    .compare-wrap th[scope="col"] {
+        padding: 16px 20px;
+        background: var(--bg);
+        font-size: 13px;
+    }
+    .compare-wrap td {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+    }
+    .compare-wrap tr:last-child td { border-bottom: none; }
+    .compare-check { color: var(--green); font-weight: 700; }
+    .compare-cross { color: var(--text-muted); }
+    .compare-note {
+        padding: 16px 20px;
+        background: var(--bg);
+        border-top: 1px solid var(--border);
+        font-size: 14px;
+        color: var(--text-dim);
+        line-height: 1.6;
+    }
+    .compare-calc {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 800px;
+    }
+    .calc-card {
+        background: var(--bg-card);
+        border: none;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: var(--ring);
+    }
+    .calc-card h4 { color: var(--text-dim); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .calc-card .big-num { font-size: 32px; font-weight: 800; }
+    .calc-card .big-num.good { color: var(--green); }
+    .calc-card .big-num.bad { color: var(--red); }
+    .calc-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 0; }
+
+    /* Code tabs */
+    .code-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: -1px;
+        position: relative;
+        z-index: 1;
+    }
+    .code-tab {
+        padding: 8px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+        background: var(--bg);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        border-bottom: none;
+        transition: all 0.15s;
+    }
+    .code-tab.active {
+        background: var(--bg-card);
+        color: var(--accent);
+        border-color: var(--border);
+    }
+    .code-panel { display: none; }
+    .code-panel.active { display: block; }
+
+    /* FAQ JSON-LD compatible */
+    .faq-list { max-width: 65ch; }
+
+    /* Final CTA */
+    .final-cta {
+        text-align: center;
+        padding: 80px 0;
+    }
+    .final-cta h2 { margin-bottom: 16px; }
+    .final-cta p {
+        font-size: 18px;
+        color: var(--text-dim);
+        max-width: 50ch;
+        margin: 0 auto 32px;
+        line-height: 1.7;
+    }
+    .final-cta .hero-ctas { justify-content: center; }
+    .fine-print {
+        margin-top: 16px;
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+        .hero { flex-direction: column; padding: 48px 0 40px; }
+        .hero-visual { display: none; }
+        .hero-stats { gap: 24px; }
+        .audience-grid { grid-template-columns: 1fr; }
+        .steps-grid { grid-template-columns: 1fr; }
+        .compare-calc { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+        .hero-stats { flex-direction: column; gap: 12px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# ══════════════════════════════════════════════════
+   Section 1: Hero
+   ══════════════════════════════════════════════════ #}
+<section class="section container">
+    <div class="hero">
+        <div class="hero-text">
+            <h1>{{ t('hero.title_pre') if t else 'The' }} <strong class="gradient-text">{{ t('hero.title_highlight') if t else 'API Marketplace' }}</strong> {{ t('hero.title_post') if t else 'Where Agents Pay, Not Humans' }}</h1>
+            <p><strong>{{ t('hero.provider_label') if t else 'Provider:' }}</strong> {{ t('hero.provider_desc') if t else 'list your API once, let AI agents worldwide discover, call, and pay you automatically.' }}<br>
+            <strong>{{ t('hero.builder_label') if t else 'Builder:' }}</strong> {{ t('hero.builder_desc') if t else 'integrate any API in minutes — agents handle discovery, auth, and billing.' }}</p>
+            <div class="hero-ctas">
+                <a href="/providers" class="btn-primary">{{ t('hero.btn_list_api') if t else 'List Your API' }}</a>
+                <a href="/api-docs#quickstart" class="btn-secondary">{{ t('hero.btn_start_building') if t else 'Start Building' }}</a>
+            </div>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-num">{{ service_count }}+</div>
+                    <div class="hero-stat-label">{{ t('hero.stat_services') if t else 'Active Services' }}</div>
+                </div>
+                <div>
+                    {% set calls = total_calls|default(0) %}
+                    {% if calls >= 10000 %}
+                    <div class="hero-stat-num">{{ '{:,.0f}'.format(calls) }}</div>
+                    {% elif calls >= 1000 %}
+                    <div class="hero-stat-num">{{ '{:,.0f}'.format(calls) }}+</div>
+                    {% else %}
+                    <div class="hero-stat-num">{{ t('hero.stat_growing') if t else 'Growing' }}</div>
+                    {% endif %}
+                    <div class="hero-stat-label">{{ t('hero.stat_calls') if t else 'API Calls Processed' }}</div>
+                </div>
+                <div>
+                    {% set agents = agent_count|default(0) %}
+                    {% if agents >= 100 %}
+                    <div class="hero-stat-num">{{ agents }}+</div>
+                    {% else %}
+                    <div class="hero-stat-num">{{ t('hero.stat_active') if t else 'Active' }}</div>
+                    {% endif %}
+                    <div class="hero-stat-label">{{ t('hero.stat_agents') if t else 'Agent Network' }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-orb orb1"></div>
+            <div class="hero-orb orb2"></div>
+            <div class="hero-orb orb3"></div>
+            <div class="hero-node node1">&#x1F916;</div>
+            <div class="hero-node node2">&#x26A1;</div>
+            <div class="hero-node node3">&#x1F4B0;</div>
+            <div class="hero-line line1"></div>
+            <div class="hero-line line2"></div>
+        </div>
+    </div>
+</section>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 2 & 3: For Providers + For Agent Builders
+   ══════════════════════════════════════════════════ #}
+<section class="section section-alt">
+    <div class="container">
+        <span class="eyebrow text-center">{{ t('section.platform') if t else 'Platform' }}</span>
+        <h2 class="text-center mb-40">{{ t('section.two_audiences') if t else 'Built for Two Audiences, One Marketplace' }}</h2>
+        <div class="audience-grid">
+
+            {# For Providers #}
+            <div class="audience-card">
+                <h3>{{ t('audience.provider_title') if t else 'For Providers' }}</h3>
+                <h4>{{ t('audience.provider_subtitle') if t else 'Your API. Agents Finding It. Agents Paying For It.' }}</h4>
+                <p>{{ t('audience.provider_desc1') if t else 'Most API marketplaces are built for human developers. You write docs, maintain integration guides, answer the same questions over email. AgenticTrade is different.' }}</p>
+                <p>{{ t('audience.provider_desc2') if t else 'Your API gets a machine-readable <strong>MCP Tool Descriptor</strong> &mdash; agents discover it, understand what it does, call it with the right parameters, and pay you in USDC automatically. No human in the loop.' }}</p>
+                <ul>
+                    <li>{{ t('audience.provider_feat1') if t else '<strong>MCP Tool Descriptor</strong> auto-generated from your API spec' }}</li>
+                    <li>{{ t('audience.provider_feat2') if t else 'Agent-readable documentation that replaces human-facing docs' }}</li>
+                    <li>{{ t('audience.provider_feat3') if t else '<strong>Proxy Key</strong> system &mdash; your real API key never leaves our infrastructure' }}</li>
+                    <li>{{ t('audience.provider_feat4') if t else 'Automated revenue settlement in USDC/USDT or fiat' }}</li>
+                    <li>{{ t('audience.provider_feat5') if t else 'Usage analytics with per-agent breakdowns' }}</li>
+                </ul>
+                <div class="mt-40">
+                    <a href="/providers" class="btn-secondary">{{ t('audience.provider_cta') if t else 'List Your API &mdash; Free for Month 1' }}</a>
+                </div>
+            </div>
+
+            {# For Agent Builders #}
+            <div class="audience-card">
+                <h3>{{ t('audience.builder_title') if t else 'For Agent Builders' }}</h3>
+                <h4>{{ t('audience.builder_subtitle') if t else 'Stop Hardcoding API Keys. Let Your Agents Handle It.' }}</h4>
+                <p>{{ t('audience.builder_desc1') if t else 'When you embed an API into an AI agent, you bet on four things holding true:' }}</p>
+                <ol style="list-style:none; padding:0; margin-bottom:16px;">
+                    <li style="padding:6px 0; color:var(--text-dim); font-size:15px;">{{ t('audience.builder_bet1') if t else '1. The API stays available' }}</li>
+                    <li style="padding:6px 0; color:var(--text-dim); font-size:15px;">{{ t('audience.builder_bet2') if t else '2. The pricing doesn\'t change' }}</li>
+                    <li style="padding:6px 0; color:var(--text-dim); font-size:15px;">{{ t('audience.builder_bet3') if t else '3. The API key doesn\'t get leaked' }}</li>
+                    <li style="padding:6px 0; color:var(--text-dim); font-size:15px;">{{ t('audience.builder_bet4') if t else '4. The account owner doesn\'t revoke access' }}</li>
+                </ol>
+                <p style="margin-top:20px; font-weight:600; color:var(--accent);">{{ t('audience.builder_desc2') if t else 'AgenticTrade eliminates all four failure modes.' }}</p>
+                <ol style="list-style:none; padding:0; margin-bottom:16px;">
+                    <li style="padding:6px 0; font-size:15px;">✓ {{ t('audience.builder_feat1') if t else 'One integration, infinite providers &mdash; <strong>MCP Descriptor</strong> registry' }}</li>
+                    <li style="padding:6px 0; font-size:15px;">✓ {{ t('audience.builder_feat2') if t else '<strong>Proxy Key</strong> auth &mdash; no more leaked API keys' }}</li>
+                    <li style="padding:6px 0; font-size:15px;">✓ {{ t('audience.builder_feat3') if t else 'Agents pay from a wallet balance you fund once' }}</li>
+                    <li style="padding:6px 0; font-size:15px;">✓ {{ t('audience.builder_feat4') if t else 'Real-time usage logs per agent, per API call' }}</li>
+                </ol>
+                <div class="mt-40">
+                    <a href="/api-docs#quickstart" class="btn-secondary">{{ t('audience.builder_cta') if t else 'Build an Agent That Pays Its Own Way' }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 4: How It Works
+   ══════════════════════════════════════════════════ #}
+<section class="section">
+    <div class="container">
+        <span class="eyebrow text-center">{{ t('section.how_it_works') if t else 'How It Works' }}</span>
+        <h2 class="text-center mb-8">{{ t('section.three_steps') if t else 'Three Steps. Zero Human Billing.' }}</h2>
+        <p class="section-subtitle text-center" style="margin:0 auto 48px;">{{ t('section.three_steps_sub') if t else 'From registration to your first autonomous payment.' }}</p>
+
+        <div class="steps-grid">
+            <div class="steps-column">
+                <h3>{{ t('steps.provider_heading') if t else 'For Providers' }}</h3>
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.p_step1_title') if t else 'Register your API' }}</h4>
+                        <p>{{ t('steps.p_step1_desc') if t else 'Paste your OpenAPI spec or define it manually. An <strong>MCP Tool Descriptor</strong> is generated automatically.' }}</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.p_step2_title') if t else 'Set pricing' }}</h4>
+                        <p>{{ t('steps.p_step2_desc') if t else 'Per-call, tiered, or freemium. Agents read your pricing before calling &mdash; no surprises for either side.' }}</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.p_step3_title') if t else 'Earn automatically' }}</h4>
+                        <p>{{ t('steps.p_step3_desc') if t else 'Payments settle in USDC, USDT, or fiat. No invoices, no billing support tickets. Just revenue.' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="steps-column">
+                <h3>{{ t('steps.builder_heading') if t else 'For Agent Builders' }}</h3>
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.b_step1_title') if t else 'Discover' }}</h4>
+                        <p>{{ t('steps.b_step1_desc') if t else 'Browse the MCP registry or let your agent query it programmatically. Filter by capability, price, or category.' }}</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.b_step2_title') if t else 'Integrate' }}</h4>
+                        <p>{{ t('steps.b_step2_desc') if t else '<strong>Proxy Key</strong> + <strong>MCP Descriptor</strong> = your agent understands the API. One integration covers all providers.' }}</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>{{ t('steps.b_step3_title') if t else 'Deploy' }}</h4>
+                        <p>{{ t('steps.b_step3_desc') if t else "Agent calls, agent pays. You top up the wallet. That's it. Per-call micropayments, no subscriptions." }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# HowTo JSON-LD for the section above #}
+<script type="application/ld+json">
+[
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to List Your API on AgenticTrade (For Providers)",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Register your API",
+                "text": "Paste your OpenAPI spec or define it manually. An MCP Tool Descriptor is generated automatically."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Set pricing",
+                "text": "Choose per-call, tiered, or freemium pricing. Agents read your pricing before calling."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Earn automatically",
+                "text": "Payments settle in USDC, USDT, or fiat. No invoices needed."
+            }
+        ]
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Integrate AgenticTrade APIs (For Agent Builders)",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Discover services",
+                "text": "Browse the MCP registry or let your agent query it programmatically."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Integrate with Proxy Key",
+                "text": "Proxy Key + MCP Descriptor = your agent understands the API. One integration covers all providers."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Deploy and pay per call",
+                "text": "Agent calls the API and pays per use from a pre-funded wallet. No subscriptions."
+            }
+        ]
+    }
+]
+</script>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 5: Commission Comparison
+   ══════════════════════════════════════════════════ #}
+<section class="section section-alt">
+    <div class="container">
+        <span class="eyebrow">{{ t('section.pricing') if t else 'Pricing' }}</span>
+        <h2 class="mb-8">{{ t('section.commission_comparison') if t else 'Commission Comparison' }}</h2>
+        <p class="section-subtitle">{{ t('section.commission_sub') if t else "Keep more of what you earn. AgenticTrade's commission starts at 0% and caps at 10%." }}</p>
+
+        <div class="compare-wrap">
+            <table class="data-table" role="table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ t('commission.feature') if t else 'Feature' }}</th>
+                        <th scope="col">AgenticTrade</th>
+                        <th scope="col">RapidAPI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ t('commission.month1') if t else 'Month 1 commission' }}</td>
+                        <td class="highlight">0%</td>
+                        <td>0%</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.month2_3') if t else 'Months 2&ndash;3 commission' }}</td>
+                        <td class="highlight">5%</td>
+                        <td>25%</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.month4') if t else 'Month 4+ commission' }}</td>
+                        <td class="highlight">10%</td>
+                        <td>25%</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.agent_payments') if t else 'Agent-to-agent payments' }}</td>
+                        <td class="compare-check">{{ t('commission.yes') if t else 'Yes' }}</td>
+                        <td class="compare-cross">{{ t('commission.no') if t else 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.mcp_descriptors') if t else 'MCP Tool Descriptors' }}</td>
+                        <td class="compare-check">{{ t('commission.yes') if t else 'Yes' }}</td>
+                        <td class="compare-cross">{{ t('commission.no') if t else 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.proxy_key') if t else 'Proxy Key protection' }}</td>
+                        <td class="compare-check">{{ t('commission.yes') if t else 'Yes' }}</td>
+                        <td class="compare-cross">{{ t('commission.no') if t else 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ t('commission.usdc_settlement') if t else 'USDC/USDT settlement' }}</td>
+                        <td class="compare-check">{{ t('commission.yes') if t else 'Yes' }}</td>
+                        <td class="compare-cross">{{ t('commission.no') if t else 'No' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="compare-calc">
+            <div class="calc-card">
+                <h4>{{ t('commission.at_calc_title') if t else 'Provider earning $10,000/month' }}</h4>
+                <div class="big-num good">$9,000</div>
+                <p>{{ t('commission.at_calc_note') if t else 'Your take-home on AgenticTrade (10% commission from month 4)' }}</p>
+            </div>
+            <div class="calc-card">
+                <h4>{{ t('commission.comp_calc_title') if t else 'Same provider on RapidAPI' }}</h4>
+                <div class="big-num bad">$7,500</div>
+                <p>{{ t('commission.comp_calc_note') if t else 'Your take-home on RapidAPI (25% commission, forever)' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 6: Code Integration Examples
+   ══════════════════════════════════════════════════ #}
+<section class="section">
+    <div class="container">
+        <span class="eyebrow">{{ t('section.integration') if t else 'Integration' }}</span>
+        <h2 class="mb-8"><span class="gradient-text">{{ t('section.simple_integration') if t else 'Simple Integration' }}</span></h2>
+        <p class="section-subtitle">{{ t('integration.desc') if t else 'Call any marketplace service with a single HTTP request. Three languages, real response headers.' }}</p>
+
+        <div class="code-tabs">
+            <div class="code-tab active" data-tab="python">Python</div>
+            <div class="code-tab" data-tab="curl">cURL</div>
+            <div class="code-tab" data-tab="node">Node.js</div>
+        </div>
+
+        <div class="code-panel active" data-tab="python">
+            <div class="code-block">
+<code><span class="kw">import</span> httpx
+
+client = httpx.Client()
+resp = client.post(
+    <span class="str">"https://agentictrade.io/api/v1/proxy/{service_id}/api/scan"</span>,
+    headers={<span class="str">"Authorization"</span>: <span class="str">f"Bearer {key_id}:{secret}"</span>},
+    json={<span class="str">"indicators"</span>: [<span class="str">"rsi"</span>, <span class="str">"macd"</span>]},
+)
+
+<span class="cmt"># Billing is automatic — check response headers</span>
+<span class="fn">print</span>(resp.headers[<span class="str">"X-ACF-Amount"</span>])      <span class="cmt"># "0.50"</span>
+<span class="fn">print</span>(resp.headers[<span class="str">"X-ACF-Free-Tier"</span>])   <span class="cmt"># "false"</span>
+<span class="fn">print</span>(resp.json())                        <span class="cmt"># Service response body</span></code>
+            </div>
+        </div>
+
+        <div class="code-panel" data-tab="curl">
+            <div class="code-block">
+<code><span class="cmt"># Call a service through the marketplace proxy</span>
+curl -X POST \
+  <span class="str">"https://agentictrade.io/api/v1/proxy/{service_id}/api/scan"</span> \
+  -H <span class="str">"Authorization: Bearer {key_id}:{secret}"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"indicators": ["rsi", "macd"]}'</span>
+
+<span class="cmt"># Response headers include billing info:</span>
+<span class="cmt"># X-ACF-Amount: 0.50</span>
+<span class="cmt"># X-ACF-Free-Tier: false</span>
+<span class="cmt"># X-ACF-Usage-Id: rec_abc123</span></code>
+            </div>
+        </div>
+
+        <div class="code-panel" data-tab="node">
+            <div class="code-block">
+<code><span class="kw">const</span> resp = <span class="kw">await</span> <span class="fn">fetch</span>(
+  <span class="str">`https://agentictrade.io/api/v1/proxy/${serviceId}/api/scan`</span>,
+  {
+    method: <span class="str">"POST"</span>,
+    headers: {
+      <span class="str">"Authorization"</span>: <span class="str">`Bearer ${keyId}:${secret}`</span>,
+      <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>,
+    },
+    body: JSON.stringify({ indicators: [<span class="str">"rsi"</span>, <span class="str">"macd"</span>] }),
+  }
+);
+
+<span class="cmt">// Billing info in response headers</span>
+console.log(resp.headers.get(<span class="str">"X-ACF-Amount"</span>));    <span class="cmt">// "0.50"</span>
+console.log(resp.headers.get(<span class="str">"X-ACF-Free-Tier"</span>)); <span class="cmt">// "false"</span>
+<span class="kw">const</span> data = <span class="kw">await</span> resp.json();</code>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 7: FAQ (with FAQPage schema)
+   ══════════════════════════════════════════════════ #}
+<section class="section section-alt">
+    <div class="container">
+        <span class="eyebrow">{{ t('section.faq') if t else 'FAQ' }}</span>
+        <h2 class="mb-40">{{ t('section.faq_title') if t else 'Frequently Asked Questions' }}</h2>
+        <div class="faq-list">
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q1') if t else 'What makes AgenticTrade different from RapidAPI?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a1') if t else 'Two things. First, AI agents can pay here &mdash; not just humans. Your AI agent can have its own wallet, discover APIs via MCP Tool Descriptors, and pay for usage without you touching anything. Second, our commission is 0% for month 1, 5% for months 2&ndash;3, and 10% after &mdash; versus RapidAPI\'s flat 25%. For a provider doing $10,000/month, that\'s $1,500/month more in your pocket.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q2') if t else 'What is an MCP Tool Descriptor?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a2') if t else '<strong>MCP (Model Context Protocol) Tool Descriptor</strong> is a machine-readable description of what an API does, what parameters it accepts, and what it returns. Your agent reads it, understands how to call the API, and calls it correctly &mdash; without you hardcoding anything. AgenticTrade auto-generates the descriptor from your API spec.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q3') if t else 'How does the Proxy Key system work?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a3') if t else 'When you list an API, you provide your real API key to AgenticTrade. Consuming agents use a <strong>Proxy Key</strong> to call your API through our infrastructure. Your real key is never exposed to any external agent. You can rotate it anytime without touching agent code or breaking integrations.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q4') if t else 'What payment methods does AgenticTrade accept?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a4') if t else 'AgenticTrade supports three payment rails: <strong>x402</strong> (USDC on Base, fully agent-native), <strong>PayPal</strong> (fiat cards, bank transfers, PayPal balance), and <strong>NOWPayments</strong> (300+ cryptocurrencies). Providers choose how they want to receive settlement. Agent builders fund their wallet in USDC or USDT.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q5') if t else "Can I use AgenticTrade if my agent isn't a crypto-native application?" }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a5') if t else 'Yes. Agent builders don\'t need to know anything about crypto. You fund a wallet in USDC using a card, your agent handles the rest. For providers, you can receive fiat via PayPal and never touch a wallet. Crypto is the payment rail, not a requirement for your application.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q6') if t else 'How does an agent discover my API?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a6') if t else 'The MCP registry is searchable by capability. An agent can query it like: "find me a weather API for Seoul that returns temperature in Celsius." If your <strong>MCP Tool Descriptor</strong> matches, the agent knows how to call you, what it costs, and can pay in one step &mdash; all programmatically.' }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q7') if t else 'What happens if my API goes down?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a7') if t else "AgenticTrade handles payment processing and request routing, but availability is the provider's responsibility. If your API returns an error, the consuming agent is not charged. AgenticTrade tracks uptime and latency metrics per service, visible in your provider dashboard." }}</div>
+                </div>
+            </div>
+
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div class="faq-q" itemprop="name">{{ t('faq.q8') if t else 'Is AgenticTrade live?' }}</div>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <div itemprop="text">{{ t('faq.a8') if t else 'AgenticTrade is in early access with live services processing real API calls. Providers can list APIs and start earning immediately. Agent builders can create keys and consume services today at <a href="https://agentictrade.io/api-docs">agentictrade.io/api-docs</a>.' }}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# FAQPage JSON-LD #}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What makes AgenticTrade different from RapidAPI?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Two things. First, AI agents can pay here — not just humans. Your AI agent can have its own wallet, discover APIs via MCP Tool Descriptors, and pay for usage without you touching anything. Second, our commission is 0% for month 1, 5% for months 2–3, and 10% after — versus RapidAPI's flat 25%."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is an MCP Tool Descriptor?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "MCP (Model Context Protocol) Tool Descriptor is a machine-readable description of what an API does, what parameters it accepts, and what it returns. Your agent reads it, understands how to call the API, and calls it correctly — without you hardcoding anything."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How does the Proxy Key system work?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "When you list an API, you provide your real API key to AgenticTrade. Consuming agents use a Proxy Key to call your API through our infrastructure. Your real key is never exposed to any external agent."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What payment methods does AgenticTrade accept?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "AgenticTrade supports three payment rails: x402 (USDC on Base, fully agent-native), PayPal (fiat cards, bank transfers, PayPal balance), and NOWPayments (300+ cryptocurrencies)."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use AgenticTrade if my agent isn't a crypto-native application?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Agent builders don't need to know anything about crypto. You fund a wallet in USDC using a card, your agent handles the rest. For providers, you can receive fiat via PayPal and never touch a wallet."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How does an agent discover my API?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The MCP registry is searchable by capability. An agent can query it like: find me a weather API for Seoul that returns temperature in Celsius. If your MCP Tool Descriptor matches, the agent knows how to call you, what it costs, and can pay in one step."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens if my API goes down?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "AgenticTrade handles payment processing and request routing, but availability is the provider's responsibility. If your API returns an error, the consuming agent is not charged."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is AgenticTrade live?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "AgenticTrade is in early access with live services processing real API calls. Providers can list APIs and start earning immediately."
+            }
+        }
+    ]
+}
+</script>
+
+
+<hr class="canvas-grid">
+
+{# ══════════════════════════════════════════════════
+   Section 8: Final CTA
+   ══════════════════════════════════════════════════ #}
+<section class="section">
+    <div class="container">
+        <div class="final-cta">
+            <h2>{{ t('cta.final_title_1') if t else 'The web is for humans.' }}<br><span class="gradient-text">{{ t('cta.final_title_2') if t else 'Your agent needs its own economy.' }}</span></h2>
+            <p>{{ t('cta.final_desc') if t else 'AgenticTrade is the API marketplace built for AI agents &mdash; not the humans who deploy them. List your API and earn from agents worldwide. Or build your agent to pay its own bills.' }}</p>
+            <div class="hero-ctas">
+                <a href="/providers" class="btn-primary">{{ t('cta.register_provider') if t else 'Register as a Provider' }}</a>
+                <a href="/api-docs#quickstart" class="btn-secondary">{{ t('cta.build_with') if t else 'Build with AgenticTrade' }}</a>
+                <a href="mailto:partners@agentictrade.io" class="btn-secondary" style="border-color:var(--border-light); color:var(--text-dim);">{{ t('cta.talk_to_us') if t else 'Talk to Us' }}</a>
+            </div>
+            <div class="fine-print">{{ t('cta.no_credit_card') if t else 'No credit card required. 0% commission for your first month.' }}</div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Code tabs
+document.querySelectorAll('.code-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+        var target = this.dataset.tab;
+        document.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.code-panel').forEach(function(p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelector('.code-panel[data-tab="' + target + '"]').classList.add('active');
+    });
+});
+</script>
+{% endblock %}

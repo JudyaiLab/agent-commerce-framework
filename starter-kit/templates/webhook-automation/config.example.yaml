@@ -1,0 +1,61 @@
+# Webhook Automation Configuration
+
+server:
+  host: "127.0.0.1"
+  port: 9100
+
+# ACF server connection
+acf:
+  url: "https://agentictrade.io"
+  api_key: ""  # Optional: for calling ACF APIs from handlers
+
+# Webhook verification
+webhook_secret: "change-me-to-match-acf-registration"
+
+# Retry policy
+retry:
+  max_attempts: 5
+  initial_delay_sec: 2      # First retry after 2s
+  backoff_multiplier: 2.0   # 2s → 4s → 8s → 16s → 32s
+  max_delay_sec: 60
+  dead_letter_dir: "dead_letter"
+
+# Event handlers — disable any you don't need
+handlers:
+  payment.confirmed:
+    enabled: true
+    notify: true
+  payment.failed:
+    enabled: true
+    notify: true
+  service.registered:
+    enabled: true
+    notify: false
+  service.updated:
+    enabled: true
+    notify: false
+  proxy.called:
+    enabled: true
+    notify: false   # Too noisy for notifications
+  settlement.completed:
+    enabled: true
+    notify: true
+  balance.low:
+    enabled: true
+    notify: true
+    threshold: 1.0  # USD — alert when buyer balance drops below this
+
+# Notifications (optional)
+notifications:
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/services/XXX/YYY/ZZZ"
+  telegram:
+    enabled: false
+    bot_token: ""
+    chat_id: ""
+
+# Logging
+logging:
+  level: "INFO"          # DEBUG, INFO, WARNING, ERROR
+  file: "webhook.log"    # Set to "" for stdout only

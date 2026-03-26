@@ -1,0 +1,43 @@
+# AgenticTrade API Monetization Configuration
+# Copy this file to config.yaml and customize for your API.
+
+marketplace:
+  url: "https://agentictrade.io"
+  # Your provider API key (get one from POST /api/v1/auth/keys)
+  api_key: "your_key_id:your_secret"
+
+services:
+  - name: "My API — Full Access"
+    description: "Complete access to all endpoints with real-time data"
+    endpoint: "http://localhost:5000"  # Your existing API URL
+    price_per_call: 0.50
+    free_tier_calls: 5
+    category: "data"
+    tags: ["api", "data", "real-time"]
+    paths:
+      - "/analyze"
+      - "/search"
+      - "/report"
+
+  - name: "My API — Demo"
+    description: "Free demo with sample data for testing"
+    endpoint: "http://localhost:5000/demo"
+    price_per_call: 0.00
+    free_tier_calls: 0
+    category: "data"
+    tags: ["api", "demo", "free"]
+    paths:
+      - "/demo/analyze"
+
+billing:
+  # NOWPayments for crypto deposits (get keys at https://nowpayments.io)
+  nowpayments_api_key: ""
+  nowpayments_ipn_secret: ""
+  # Minimum deposit amount (NOWPayments USDT TRC20 minimum is ~$19)
+  min_deposit: 20.00
+
+settlement:
+  # How often to request payouts (daily, weekly, monthly)
+  frequency: "weekly"
+  # Minimum balance before requesting payout
+  min_payout: 10.00

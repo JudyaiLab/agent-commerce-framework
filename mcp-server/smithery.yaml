@@ -1,0 +1,32 @@
+# Smithery configuration: https://smithery.ai/docs/config#smitheryyaml
+# Register at: https://smithery.ai
+
+startCommand:
+  type: stdio
+
+configSchema:
+  type: object
+  required: []
+  properties:
+    agentictradeBaseUrl:
+      type: string
+      default: "https://agentictrade.io"
+      description: "Base URL of the AgenticTrade marketplace API."
+    agentictradeApiKey:
+      type: string
+      description: "AgenticTrade API key (format: key_id:secret). Required for call_service and get_balance."
+    agentictradeBuyerId:
+      type: string
+      description: "Your buyer/agent ID on AgenticTrade. Required for get_balance."
+
+commandFunction:
+  |-
+  (config) => ({
+    command: 'agentictrade-mcp',
+    args: [],
+    env: {
+      AGENTICTRADE_BASE_URL: config.agentictradeBaseUrl || 'https://agentictrade.io',
+      AGENTICTRADE_API_KEY: config.agentictradeApiKey || '',
+      AGENTICTRADE_BUYER_ID: config.agentictradeBuyerId || ''
+    }
+  })

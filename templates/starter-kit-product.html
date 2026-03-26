@@ -1,0 +1,352 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ t('starter.page_title') if t else 'AgenticTrade Starter Kit — Build an AI Agent Marketplace' }}{% endblock %}
+{% block meta_description %}{{ t('starter.meta_desc') if t else 'The complete toolkit to build an AI agent marketplace. 36 production files, 4 templates, 13-chapter guide, Python SDK, and deployment configs. Free to start.' }}{% endblock %}
+{% block og_title %}{{ t('starter.page_title') if t else 'AgenticTrade Starter Kit — Build an AI Agent Marketplace' }}{% endblock %}
+{% block og_description %}{{ t('starter.meta_desc') if t else 'Build an AI agent marketplace in hours, not weeks. 36 production files, 13-chapter guide, 4 ready templates. Free.' }}{% endblock %}
+{% block tw_title %}{{ t('starter.page_title') if t else 'AgenticTrade Starter Kit — Build an AI Agent Marketplace' }}{% endblock %}
+{% block tw_description %}{{ t('starter.meta_desc') if t else 'Build an AI agent marketplace in hours, not weeks. 36 production files, 13-chapter guide, 4 ready templates. Free.' }}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "AgenticTrade Starter Kit",
+    "description": "The complete toolkit for developers who want AI agents to buy and sell services autonomously. Production templates, deployment configs, and a 13-chapter guide.",
+    "brand": {
+        "@type": "Organization",
+        "name": "AgenticTrade"
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "description": "Free — includes templates, guide, configs & CLI tools."
+    },
+    "category": "Developer Tools",
+    "url": "https://agentictrade.io/starter-kit"
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://agentictrade.io/"},
+        {"@type": "ListItem", "position": 2, "name": "Starter Kit", "item": "https://agentictrade.io/starter-kit"}
+    ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/product.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container" style="padding-top:16px;">
+    <nav aria-label="Breadcrumb" style="font-size:13px; color:var(--text-muted);">
+        <a href="/" style="color:var(--text-dim);">{{ t('breadcrumb.home') if t else 'Home' }}</a> &rsaquo; {{ t('nav.starter_kit') if t else 'Starter Kit' }}
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{# Hero #}
+<section class="section">
+    <div class="container">
+        <div class="product-hero">
+            <div class="product-badge">{{ t('starter.badge') if t else 'STARTER KIT' }}</div>
+            <h1 class="gradient-text">{{ t('starter.title') if t else 'Build an AI Agent Marketplace in Hours, Not Weeks' }}</h1>
+            <p>{{ t('starter.subtitle') if t else 'The complete toolkit for developers who want AI agents to buy and sell services autonomously. Production templates, deployment configs, and a 13-chapter guide.' }}</p>
+
+            <div class="features-row" style="margin-bottom:40px">
+                <div class="feature">
+                    <div class="feature-num">36</div>
+                    <div class="feature-label">{{ t('starter.feature_files') if t else 'Production Files' }}</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-num">13</div>
+                    <div class="feature-label">{{ t('starter.feature_chapters') if t else 'Chapter Guide' }}</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-num">4</div>
+                    <div class="feature-label">{{ t('starter.feature_templates') if t else 'Ready Templates' }}</div>
+                </div>
+            </div>
+
+            <div class="product-price">{{ t('starter.price_free') if t else 'Free' }} <span>&mdash; {{ t('starter.price_sub') if t else 'start building today' }}</span></div>
+            <div class="product-guarantee">{{ t('starter.guarantee') if t else 'Includes templates, guide, configs &amp; CLI tools. Revenue from 10% platform commission.' }}</div>
+            <a href="#download" class="btn-primary">{{ t('starter.cta_get') if t else 'Get the Starter Kit' }}</a>
+        </div>
+    </div>
+</section>
+
+{# What's Inside #}
+<section class="section section-alt">
+    <div class="container">
+        <div class="product-section">
+            <h2 class="product-section-title">{{ t('starter.whats_inside') if t else "What's Inside" }}</h2>
+            <div class="product-section-sub">{{ t('starter.whats_inside_sub') if t else 'Everything you need from first line of code to production deployment' }}</div>
+
+            <div class="contents-grid">
+                <div class="content-card">
+                    <div class="card-icon">&#9889;</div>
+                    <div class="card-title">{{ t('starter.card_api_title') if t else 'API Monetization Template' }}</div>
+                    <div class="card-desc">{{ t('starter.card_api_desc') if t else 'Wrap any existing API behind metered billing. YAML config, bulk registration, and E2E test script included.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_api_tag') if t else 'Copy-paste revenue' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#129302;</div>
+                    <div class="card-title">{{ t('starter.card_swarm_title') if t else 'Multi-Agent Swarm' }}</div>
+                    <div class="card-desc">{{ t('starter.card_swarm_desc') if t else '5-agent economy that discovers, evaluates, purchases, and reports on marketplace services autonomously.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_swarm_tag') if t else 'Discover &rarr; Evaluate &rarr; Buy' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#128268;</div>
+                    <div class="card-title">{{ t('starter.card_mcp_title') if t else 'MCP Commerce Server' }}</div>
+                    <div class="card-desc">{{ t('starter.card_mcp_desc') if t else 'Let Claude, GPT, and other LLMs buy marketplace services natively via Model Context Protocol.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_mcp_tag') if t else 'Works with Claude Desktop' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#128276;</div>
+                    <div class="card-title">{{ t('starter.card_webhook_title') if t else 'Webhook Automation' }}</div>
+                    <div class="card-desc">{{ t('starter.card_webhook_desc') if t else 'Production event consumer with exponential retry, dead-letter queue, and Slack/Telegram notifications.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_webhook_tag') if t else 'Never miss a payment' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#128640;</div>
+                    <div class="card-title">{{ t('starter.card_deploy_title') if t else 'Production Deploy' }}</div>
+                    <div class="card-desc">{{ t('starter.card_deploy_desc') if t else 'Docker Compose stack with Nginx reverse proxy, SSL termination, rate limiting, and security headers.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_deploy_tag') if t else 'One-command deploy' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#128230;</div>
+                    <div class="card-title">{{ t('starter.card_sdk_title') if t else 'Python SDK' }}</div>
+                    <div class="card-desc">{{ t('starter.card_sdk_desc') if t else 'Full marketplace client with service registration, proxy calls, teams, and webhooks. Plus a Buyer Agent that auto-handles x402 crypto payments.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_sdk_tag') if t else 'Import and go' }}</div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-icon">&#128218;</div>
+                    <div class="card-title">{{ t('starter.card_guide_title') if t else '13-Chapter Guide' }}</div>
+                    <div class="card-desc">{{ t('starter.card_guide_desc') if t else 'From first transaction to monetization strategy. Architecture deep dives, payment integration, SSRF protection, and business models.' }}</div>
+                    <div class="card-tag">{{ t('starter.card_guide_tag') if t else '3,400+ lines of knowledge' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Guide Chapters #}
+<section class="section">
+    <div class="container">
+        <div class="product-section">
+            <h2 class="product-section-title">{{ t('starter.guide_title') if t else 'The Guide' }}</h2>
+            <div class="product-section-sub">{{ t('starter.guide_sub') if t else '13 chapters taking you from zero to production marketplace' }}</div>
+
+            <ul class="chapter-list">
+                <li><span class="chapter-num">0</span> {{ t('starter.ch0') if t else 'Introduction: The Agent Commerce Revolution' }}</li>
+                <li><span class="chapter-num">1</span> {{ t('starter.ch1') if t else 'The Agent Economy Landscape' }}</li>
+                <li><span class="chapter-num">2</span> {{ t('starter.ch2') if t else 'Quick Start: First Transaction in 15 Min' }}</li>
+                <li><span class="chapter-num">3</span> {{ t('starter.ch3') if t else 'Architecture Deep Dive' }}</li>
+                <li><span class="chapter-num">4</span> {{ t('starter.ch4') if t else 'Service Registration &amp; Discovery' }}</li>
+                <li><span class="chapter-num">5</span> {{ t('starter.ch5') if t else 'Billing &amp; Credits System' }}</li>
+                <li><span class="chapter-num">6</span> {{ t('starter.ch6') if t else 'Proxy: SSRF Protection &amp; Routing' }}</li>
+                <li><span class="chapter-num">7</span> {{ t('starter.ch7') if t else 'Payment Integration (3 Providers)' }}</li>
+                <li><span class="chapter-num">8</span> {{ t('starter.ch8') if t else 'MCP Server: Let LLMs Buy Services' }}</li>
+                <li><span class="chapter-num">9</span> {{ t('starter.ch9') if t else 'Multi-Agent Swarms' }}</li>
+                <li><span class="chapter-num">10</span> {{ t('starter.ch10') if t else 'Production Deployment' }}</li>
+                <li><span class="chapter-num">11</span> {{ t('starter.ch11') if t else 'Monetization Strategies' }}</li>
+                <li><span class="chapter-num">12</span> {{ t('starter.ch12') if t else "What's Next: Advanced Features" }}</li>
+                <li><span class="chapter-num">+</span> {{ t('starter.ch_plus') if t else 'API Reference &amp; Troubleshooting' }}</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+{# Payment Providers #}
+<section class="section section-alt">
+    <div class="container">
+        <div class="product-section">
+            <h2 class="product-section-title">{{ t('starter.payment_title') if t else 'Three Payment Rails, One Framework' }}</h2>
+            <div class="product-section-sub">{{ t('starter.payment_sub') if t else 'Accept crypto, fiat, or on-chain USDC &mdash; your marketplace, your choice' }}</div>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ t('starter.table_provider') if t else 'Provider' }}</th>
+                        <th scope="col">{{ t('starter.table_currency') if t else 'Currency' }}</th>
+                        <th scope="col">{{ t('starter.table_agent_native') if t else 'Agent-Native' }}</th>
+                        <th scope="col">{{ t('starter.table_setup_time') if t else 'Setup Time' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PayPal</td>
+                        <td>{{ t('starter.table_fiat') if t else 'Fiat (USD, EUR, GBP)' }}</td>
+                        <td>{{ t('starter.table_no') if t else 'No' }}</td>
+                        <td>{{ t('starter.table_30min') if t else '30 min' }}</td>
+                    </tr>
+                    <tr>
+                        <td>NOWPayments</td>
+                        <td>{{ t('starter.table_200_cryptos') if t else '300+ cryptos' }}</td>
+                        <td>{{ t('starter.table_partial') if t else 'Partial' }}</td>
+                        <td>{{ t('starter.table_30min') if t else '30 min' }}</td>
+                    </tr>
+                    <tr>
+                        <td>x402 + AgentKit</td>
+                        <td>{{ t('starter.table_usdc_base') if t else 'USDC on Base' }}</td>
+                        <td class="compare-check">{{ t('starter.table_fully_autonomous') if t else 'Fully autonomous' }}</td>
+                        <td>{{ t('starter.table_2hours') if t else '2 hours' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{# DIY vs Starter Kit #}
+<section class="section">
+    <div class="container">
+        <div class="product-section">
+            <h2 class="product-section-title">{{ t('starter.compare_title') if t else 'Build From Scratch vs. Starter Kit' }}</h2>
+            <div class="product-section-sub">{{ t('starter.compare_sub') if t else 'The framework is open source. The Starter Kit saves you weeks.' }}</div>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ t('starter.compare_feature') if t else 'Feature' }}</th>
+                        <th scope="col">{{ t('starter.compare_opensource') if t else 'Open Source (Free)' }}</th>
+                        <th scope="col">{{ t('starter.compare_starterkit') if t else 'Starter Kit (Free)' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>{{ t('starter.compare_core') if t else 'Core Framework' }}</td><td class="compare-check">&#10003;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_api_docs') if t else 'API Docs' }}</td><td class="compare-check">&#10003;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_templates') if t else 'Production Templates (4)' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_deploy') if t else 'Deploy Configs (Nginx+SSL+Docker)' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_guide') if t else '13-Chapter Guide' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_mcp') if t else 'MCP Commerce Server' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_swarm') if t else 'Multi-Agent Swarm Template' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_webhook') if t else 'Webhook Automation' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_sdk') if t else 'Bundled SDK + Buyer Agent' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_cli') if t else 'CLI Smoke Test' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                    <tr><td>{{ t('starter.compare_cheatsheet') if t else 'API Reference Cheatsheet' }}</td><td class="compare-cross">&#10007;</td><td class="compare-check">&#10003;</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{# FAQ #}
+<section class="section section-alt">
+    <div class="container">
+        <div class="product-section">
+            <h2 class="product-section-title">{{ t('starter.faq_title') if t else 'FAQ' }}</h2>
+
+            <div class="product-faq-item">
+                <div class="product-faq-q">{{ t('starter.faq1_q') if t else 'What tech stack does this use?' }}</div>
+                <div class="product-faq-a">{{ t('starter.faq1_a') if t else 'Python (FastAPI), SQLite, Docker. Payment integrations: NOWPayments (crypto), PayPal (fiat), x402+AgentKit (on-chain USDC). MCP for LLM integration.' }}</div>
+            </div>
+
+            <div class="product-faq-item">
+                <div class="product-faq-q">{{ t('starter.faq2_q') if t else 'Do I need blockchain experience?' }}</div>
+                <div class="product-faq-a">{{ t('starter.faq2_a') if t else 'No. The framework handles all crypto complexity. You configure an API key and wallet address &mdash; the framework does the rest.' }}</div>
+            </div>
+
+            <div class="product-faq-item">
+                <div class="product-faq-q">{{ t('starter.faq3_q') if t else 'Can I use this commercially?' }}</div>
+                <div class="product-faq-a">{{ t('starter.faq3_a') if t else 'Yes. The core framework is MIT-licensed. The Starter Kit content (templates, guide, configs) is licensed for your commercial use. Build your marketplace, charge your fees, keep your revenue.' }}</div>
+            </div>
+
+            <div class="product-faq-item">
+                <div class="product-faq-q">{{ t('starter.faq4_q') if t else "What's the difference from the open-source repo?" }}</div>
+                <div class="product-faq-a">{{ t('starter.faq4_a') if t else 'The open-source repo has the core framework. The Starter Kit adds 4 production templates, a bundled Python SDK with Buyer Agent, deployment configs, CLI tools, and a comprehensive 13-chapter guide. Think of it as the difference between a library and a complete project starter.' }}</div>
+            </div>
+
+            <div class="product-faq-item">
+                <div class="product-faq-q">{{ t('starter.faq5_q') if t else 'How long to get a marketplace running?' }}</div>
+                <div class="product-faq-a">{{ t('starter.faq5_a') if t else 'Chapter 2 gets you a working marketplace in 15 minutes. Full production deployment (with SSL, monitoring, and real payments) takes 2-4 hours following the guide.' }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Final CTA — Email Gate Download #}
+<section class="section">
+    <div class="container">
+        <div class="product-final-cta" id="download">
+            <h2>{{ t('starter.final_cta_title') if t else 'Ready to Build the Future of Agent Commerce?' }}</h2>
+            <p>{{ t('starter.final_cta_desc') if t else '36 production files. 13-chapter guide. Ship your AI agent marketplace today.' }}</p>
+            <div class="product-price" style="margin-bottom:4px">{{ t('starter.price_free') if t else 'Free' }}</div>
+            <div class="product-guarantee" style="margin-bottom:32px">{{ t('starter.email_gate_desc') if t else 'Enter your email to get the Starter Kit + onboarding tips.' }}</div>
+
+            <form id="download-form" class="download-form">
+                <input type="email" id="gate-email" required placeholder="{{ t('starter.email_placeholder') if t else 'you@company.com' }}"
+                    aria-label="{{ t('starter.email_label') if t else 'Email address' }}">
+                <button type="submit" class="btn-primary" style="margin:0">{{ t('starter.cta_download') if t else 'Download Free' }}</button>
+            </form>
+            <div id="gate-result" style="display:none;margin-bottom:24px"></div>
+
+            <a href="https://github.com/judyailab/agent-commerce-framework" class="btn-secondary" target="_blank" rel="noopener">{{ t('starter.cta_github') if t else 'View Open Source Framework on GitHub' }}</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+var _t = {
+    processing: {{ ("'" + t('starter.processing') + "'") if t else "'Processing...'" }},
+    welcomeBack: {{ ("'" + t('starter.welcome_back') + "'") if t else "'Welcome back!'" }},
+    checkEmail: {{ ("'" + t('starter.check_email') + "'") if t else "'Check your email for the welcome guide!'" }},
+    downloadZip: {{ ("'" + t('starter.download_zip') + "'") if t else "'Download Starter Kit (.zip)'" }},
+    downloadFree: {{ ("'" + t('starter.cta_download') + "'") if t else "'Download Free'" }},
+    errorEmail: {{ ("'" + t('starter.error_email') + "'") if t else "'Please enter a valid email address.'" }},
+    errorGeneric: {{ ("'" + t('starter.error_generic') + "'") if t else "'Something went wrong. Please try again.'" }}
+};
+document.getElementById('download-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var email = document.getElementById('gate-email').value.trim();
+    var btn = this.querySelector('button');
+    var result = document.getElementById('gate-result');
+    btn.disabled = true;
+    btn.textContent = _t.processing;
+    try {
+        var resp = await fetch('/api/v1/download-gate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: email})
+        });
+        var data = await resp.json();
+        if (resp.ok) {
+            this.style.display = 'none';
+            result.style.display = 'block';
+            result.innerHTML = '<p style="color:var(--accent);font-size:1.1rem;margin-bottom:1rem">' +
+                (data.already_subscribed ? _t.welcomeBack : _t.checkEmail) +
+                '</p><a href="' + data.download_url + '" class="btn-primary">' + _t.downloadZip + '</a>';
+        } else {
+            btn.disabled = false;
+            btn.textContent = _t.downloadFree;
+            result.style.display = 'block';
+            result.innerHTML = '<p style="color:var(--red)">' + _t.errorEmail + '</p>';
+        }
+    } catch(err) {
+        btn.disabled = false;
+        btn.textContent = _t.downloadFree;
+        result.style.display = 'block';
+        result.innerHTML = '<p style="color:var(--red)">' + _t.errorGeneric + '</p>';
+    }
+});
+</script>
+{% endblock %}
