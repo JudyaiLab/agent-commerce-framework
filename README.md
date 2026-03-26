@@ -322,6 +322,26 @@ python -m pytest tests/test_payments_providers.py -v
 
 ---
 
+
+## Related Protocols
+
+### [OIXA Protocol](https://github.com/ivoshemi-sys/oixa-protocol)
+
+OIXA Protocol is a complementary open standard for AI agent economic coordination:
+- **Reverse auctions**: agents post tasks, other agents bid, lowest price wins
+- **USDC escrow on Base**: cryptographic verification before payment release
+- **pip install oixa-protocol** — REST API compatible with any agent framework
+
+OIXA agents can participate in ACF marketplaces and vice versa — both protocols use USDC on Base
+and share the same goal of enabling autonomous agent-to-agent commerce.
+
+| Feature | ACF | OIXA Protocol |
+|---------|-----|---------------|
+| Payment | x402, PayPal, crypto | USDC on Base |
+| Mechanism | Service registry + proxy | Reverse auction |
+| Settlement | Periodic batches | Per-task instant |
+| License | MIT | MIT |
+
 ## Contributing
 
 1. Fork the repository
