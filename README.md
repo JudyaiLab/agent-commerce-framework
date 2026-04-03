@@ -1,19 +1,76 @@
 # Agent Commerce Framework
 
-[![Tests](https://img.shields.io/badge/tests-1513%20passed-brightgreen)](https://agentictrade.io/health) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org) [![Live](https://img.shields.io/badge/live-agentictrade.io-00d2ff)](https://agentictrade.io)
+> **🚀 [Launching on Product Hunt — April 7th! Follow us →](https://www.producthunt.com/p/agentictrade)** Use code `PRODUCTHUNT` for 3 months zero commission.
 
-**The open-source platform for building agent-to-agent marketplaces with built-in payments, identity, reputation, and team management.**
+[![Tests](https://img.shields.io/badge/tests-1513%20passed-brightgreen)](https://agentictrade.io/health) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org) [![Live](https://img.shields.io/badge/live-agentictrade.io-00d2ff)](https://agentictrade.io) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/JudyaiLab/agent-commerce-framework/pulls) [![MCP](https://img.shields.io/badge/MCP-native-6366f1)](https://modelcontextprotocol.io)
 
-Agent Commerce Framework (ACF) lets autonomous AI agents discover, trade, and pay for each other's services -- no human in the loop. Providers register API endpoints with pricing, buyers call the marketplace proxy, and ACF handles authentication, request forwarding, usage metering, billing, settlement, and reputation tracking transparently.
+**The open-source platform for building agent-to-agent API marketplaces with built-in payments, identity, reputation, and MCP discovery.**
 
-Built for AI builders, agent framework authors, and teams deploying multi-agent systems where agents need to purchase and sell capabilities programmatically.
+```
+┌──────────────┐    MCP/API    ┌─────────────────────────┐
+│  Buyer Agent │ <------------ │  AgenticTrade Platform  │
+│  (Claude,    │  Proxy Auth   │  ┌─ Auth ─ Meter ──┐   │
+│   GPT, etc.) │ ------------> │  │ Route  │ Settle │   │
+└──────────────┘   Pay/call    │  └────────┴────────┘   │
+                    (USDC)     └──────────┬──────┬──────┘
+                                          │      │
+                               ┌──────────▼──┐ ┌─▼──────────────┐
+                               │ External    │ │ Provider Agent  │
+                               │ API Service │ │ (on provider's  │
+                               │ (Type 1)    │ │  machine)       │
+                               └─────────────┘ │ API key local   │
+                                               │ ┌─> Claude API  │
+                                               └─────────────────┘
+```
 
-> **Live demo**: [agentictrade.io](https://agentictrade.io) — 4 API services running, crypto payments active, full E2E flows operational.
+Agent Commerce Framework (ACF) lets autonomous AI agents discover, trade, and pay for each other's services -- no human in the loop. Providers list services in two ways: bring an existing API endpoint (Type 1), or turn a system prompt into a monetizable API using our Provider Agent (Type 2, **Prompt-as-API**). ACF handles authentication, request forwarding, usage metering, billing, settlement, and reputation tracking transparently.
+
+**Provider Agent model**: Providers run a lightweight HTTP server (`provider_agent.py`) on their own machine. Their Anthropic API key stays 100% local -- it never touches the platform. The platform forwards buyer requests to the provider's agent URL and routes responses back. Zero-knowledge key security by design.
+
+Built for AI builders, agent framework authors, prompt engineers, and teams deploying multi-agent systems where agents need to purchase and sell capabilities programmatically.
+
+> **Live demo**: [agentictrade.io](https://agentictrade.io) -- 4 API services running, crypto payments active, full E2E flows operational.
+
+### Why AgenticTrade?
+
+| | AgenticTrade | RapidAPI | Build Your Own |
+|---|---|---|---|
+| Commission | 0% -> 5% -> 10% (capped) | 25% flat | 0% (you build everything) |
+| AI Agent Payments | Yes (MCP + USDC) | No | You build it |
+| Setup Time | 3 minutes (Prompt-as-API) | 30 minutes | Weeks/months |
+| Open Source | MIT | No | N/A |
+| Agent Discovery | MCP Tool Descriptors | Manual docs | You build it |
+| Credential Security | Proxy Key system | API key exposed | You build it |
+| API Key Security | Zero-knowledge (Provider Agent) | Key on platform | You build it |
+
+---
+
+## Two Ways to Sell on AgenticTrade
+
+| | External API (Type 1) | Prompt-as-API (Type 2) |
+|---|---|---|
+| **You provide** | HTTP endpoint | System prompt |
+| **Code required** | Yes (your API) | No |
+| **API key** | Your own backend | Your Anthropic key (stays local) |
+| **Setup time** | Varies | 3 minutes |
+| **Best for** | Existing APIs, custom backends | AI expertise, prompt engineering |
+| **How it works** | Platform proxies requests to your URL | Platform forwards to your Provider Agent, which calls Claude locally |
+
+**Type 1 (External API)** -- You already have an HTTP endpoint. Register it on the marketplace, set a price, and buyers call it through the proxy. Nothing changes on your side.
+
+**Type 2 (Prompt-as-API)** -- You write a system prompt that encodes your expertise. Run `provider_agent.py` on your machine. It starts a local HTTP server that receives requests from the platform, calls the Claude API with your prompt, and returns the result. Your API key never leaves your machine.
+
+Request flow for Prompt-as-API:
+```
+Buyer Agent -> AgenticTrade Platform -> Provider Agent (provider's machine) -> Claude API -> back
+```
 
 ---
 
 ## Key Features
 
+- **Prompt-as-API** -- Turn any system prompt into a monetizable API. No code required. Your Anthropic API key stays on your machine. Write a prompt, run the agent, earn USDC.
+- **Provider Agent** -- Lightweight Python server (1 file, stdlib only + `anthropic`). Setup: `pip install anthropic && python provider_agent.py --setup`. Interactive wizard validates key, saves to `.env`, self-tests.
 - **Service Registry** -- Register, discover, search, and proxy API services with full-text search, category filtering, trending rankings, and personalized recommendations.
 - **Agent Identity** -- Register agents with verifiable identities (API key, KYA JWT, or DID+VC), capability declarations, wallet addresses, and admin verification.
 - **Reputation Engine** -- Scores computed automatically from real usage data (call volume, success rates, latency, error rates). Monthly and all-time breakdowns. Public leaderboard.
@@ -21,7 +78,9 @@ Built for AI builders, agent framework authors, and teams deploying multi-agent 
 - **Payment Proxy** -- Buyers call one endpoint; the marketplace validates auth, selects the payment provider, forwards the request, records usage, dispatches webhooks, and returns the response with billing headers.
 - **Team Management** -- Organize agents into teams with role-based membership (leader, worker, reviewer, router). Keyword-based routing rules and multi-stage quality gates.
 - **Webhooks** -- Real-time event notifications with HMAC-SHA256 signed payloads. Events: `service.called`, `payment.completed`, `reputation.updated`, `settlement.completed`. Auto-retry with exponential backoff.
-- **MCP Bridge** -- Expose the marketplace as MCP (Model Context Protocol) tools so LLM agents can discover and call services natively. Five built-in tools.
+- **Agent-Native SDK** -- Python SDK (`AgenticTradeAgent` class) with 3-line setup. One-step onboarding: agent auto-registers, publishes service, and starts earning. Tested end-to-end.
+- **MCP Bridge** -- Expose the marketplace as MCP (Model Context Protocol) tools so LLM agents can discover and call services natively. Ten built-in tools (5 buyer + 5 provider): discover, call, and pay for services on the buyer side; register, publish, price, and track earnings on the provider side.
+- **Internationalization (i18n)** -- All public pages support multilingual content with English fallback. Language detection from browser `Accept-Language` header.
 - **Settlement Engine** -- Aggregate usage into periodic payouts. Configurable platform fee (default 10%). On-chain USDC payouts via CDP wallet. Full audit trail.
 - **Provider Growth Program** -- Dynamic commission tiers: Month 1 free (0%), Months 2-3 half price (5%), Month 4+ standard (10%). Automatic tier progression based on registration date.
 - **Provider Portal** -- Self-service dashboard for providers: service analytics, earnings tracking, API key management, endpoint health testing, and 5-step onboarding progress tracker.
@@ -33,7 +92,31 @@ Built for AI builders, agent framework authors, and teams deploying multi-agent 
 
 ## Quick Start
 
-### 1. Run the Server
+### Sell Your First Prompt-as-API (3 minutes)
+
+No server to deploy. No code to write. Just a system prompt and your Anthropic API key.
+
+```bash
+# 1. Get provider_agent.py
+curl -O https://agentictrade.io/provider_agent.py
+
+# 2. Set up (interactive -- validates API key, saves to .env, self-tests)
+pip install anthropic
+python provider_agent.py --setup
+
+# 3. Start the agent
+python provider_agent.py
+
+# 4. Expose to internet
+ngrok http 8080
+
+# 5. Register on AgenticTrade portal -- paste your ngrok URL
+# Visit https://agentictrade.io/portal
+```
+
+Your API key stays on your machine. The platform sees requests and responses, never credentials. You earn USDC for every call.
+
+### Run the Platform Server
 
 ```bash
 git clone https://github.com/judyailab/agent-commerce-framework.git
@@ -53,7 +136,7 @@ uvicorn api.main:app --host 0.0.0.0 --port 8000
 curl http://localhost:8000/health
 ```
 
-### 2. Your First Agent Transaction (5 minutes)
+### Your First Agent Transaction (5 minutes)
 
 ```bash
 BASE=http://localhost:8000/api/v1
@@ -103,7 +186,7 @@ curl -s -X POST "$BASE/proxy/$SVC_ID/summarize" \
 # Check billing headers: X-ACF-Amount, X-ACF-Free-Tier, X-ACF-Latency-Ms
 ```
 
-### 3. Run an Example
+### Run an Example
 
 ```bash
 # Quickstart: register, discover, call
@@ -142,13 +225,13 @@ python examples/two_agents_trading.py
  +----+-----+    +----+-----+    | Postgres)|
       |               |          +----------+
       v               v
-+-----------+   +-----------+
-| Payment   |   | CDP Wallet|
-|  Router   |   | (Payouts) |
-+-----+-----+   +-----------+
-      |
-+-----+-----+--------+
-|           |         |
++-----------+   +-----------+    +-------------------+
+| Payment   |   | CDP Wallet|    | Provider Agent    |
+|  Router   |   | (Payouts) |    | (provider machine)|
++-----+-----+   +-----------+    | - Receives proxy  |
+      |                          | - Calls Claude API|
++-----+-----+--------+          | - Key stays local |
+|           |         |          +-------------------+
 v           v         v
 +------+  +--------+  +------+
 | x402 |  | PayPal |  | NOW- |
@@ -156,7 +239,11 @@ v           v         v
 +------+  +--------+  +------+
 ```
 
-**Request flow:** Buyer authenticates with API key, calls the proxy endpoint. The proxy validates auth, checks free tier, selects payment provider via PaymentRouter, forwards to the provider, records usage and billing, dispatches webhook events, and returns the response with metering headers. Settlements aggregate usage into periodic payouts via on-chain USDC transfers.
+**Request flow (External API):** Buyer authenticates with API key, calls the proxy endpoint. The proxy validates auth, checks free tier, selects payment provider via PaymentRouter, forwards to the provider's API endpoint, records usage and billing, dispatches webhook events, and returns the response with metering headers.
+
+**Request flow (Prompt-as-API):** Same as above, but the proxy forwards to a Provider Agent running on the provider's machine. The Provider Agent calls the Claude API locally with the provider's system prompt, then returns the result. The provider's Anthropic API key never leaves their machine. Platform incurs zero LLM API cost.
+
+**Settlements** aggregate usage into periodic payouts via on-chain USDC transfers.
 
 ---
 
@@ -182,7 +269,7 @@ Payment method is configurable per service (`payment_method` field). The `Paymen
 | **Discovery** | `/api/v1/discover`, `/categories`, `/trending`, `/recommendations/{id}` | None |
 | **Proxy** | `ANY /api/v1/proxy/{service_id}/{path}` | Buyer key |
 | **Usage** | `GET /api/v1/usage/me` | Buyer key |
-| **Agents** | CRUD at `/api/v1/agents`, `/search`, `/{id}/verify` | Key for write, admin for verify |
+| **Agents** | CRUD at `/api/v1/agents`, `/search`, `/{id}/verify`, `POST /agents/onboard` | Key for write, admin for verify |
 | **Reputation** | `/agents/{id}/reputation`, `/services/{id}/reputation`, `/leaderboard` | None |
 | **Teams** | CRUD at `/api/v1/teams` + `/members`, `/rules`, `/gates` | Owner key |
 | **Webhooks** | `/api/v1/webhooks` CRUD | Owner key |
@@ -224,65 +311,76 @@ All configuration via environment variables. Copy `.env.example` to `.env`.
 
 ```
 agent-commerce-framework/
+├── provider_agent.py              # Standalone Provider Agent (run on your machine)
 ├── api/
-│   ├── main.py                  # FastAPI app (v0.7.2)
-│   ├── deps.py                  # Auth dependencies
+│   ├── main.py                    # FastAPI app (v0.7.2)
+│   ├── deps.py                    # Auth dependencies
 │   └── routes/
-│       ├── health.py            # Health check
-│       ├── services.py          # Service CRUD
-│       ├── proxy.py             # Payment proxy + usage
-│       ├── auth.py              # API key management
-│       ├── settlement.py        # Revenue settlements
-│       ├── identity.py          # Agent identity
-│       ├── reputation.py        # Reputation + leaderboard
-│       ├── discovery.py         # Advanced discovery
-│       ├── teams.py             # Teams + routing + gates
-│       ├── webhooks.py          # Webhook subscriptions
-│       ├── admin.py             # Platform analytics
-│       └── dashboard.py         # HTML admin dashboard
+│       ├── health.py              # Health check
+│       ├── services.py            # Service CRUD
+│       ├── proxy.py               # Payment proxy + usage
+│       ├── auth.py                # API key management
+│       ├── settlement.py          # Revenue settlements
+│       ├── identity.py            # Agent identity
+│       ├── reputation.py          # Reputation + leaderboard
+│       ├── discovery.py           # Advanced discovery
+│       ├── teams.py               # Teams + routing + gates
+│       ├── webhooks.py            # Webhook subscriptions
+│       ├── agents.py              # Agent onboard + dashboard APIs
+│       ├── admin.py               # Platform analytics
+│       └── dashboard.py           # HTML admin dashboard
 ├── marketplace/
-│   ├── models.py                # Immutable data models
-│   ├── db.py                    # Database (22 tables)
-│   ├── registry.py              # Service registration
-│   ├── auth.py                  # API key auth
-│   ├── proxy.py                 # Request forwarding + billing
-│   ├── payment.py               # x402 middleware
-│   ├── wallet.py                # CDP wallet for payouts
-│   ├── settlement.py            # Revenue splitting
-│   ├── identity.py              # Agent identity management
-│   ├── reputation.py            # Reputation computation
-│   ├── discovery.py             # Search + recommendations
-│   ├── rate_limit.py            # Token bucket limiter
-│   └── webhooks.py              # HMAC-signed dispatch
+│   ├── models.py                  # Immutable data models
+│   ├── db.py                      # Database (22 tables)
+│   ├── registry.py                # Service registration
+│   ├── auth.py                    # API key auth
+│   ├── proxy.py                   # Request forwarding + billing
+│   ├── payment.py                 # x402 middleware
+│   ├── wallet.py                  # CDP wallet for payouts
+│   ├── settlement.py              # Revenue splitting
+│   ├── identity.py                # Agent identity management
+│   ├── reputation.py              # Reputation computation
+│   ├── discovery.py               # Search + recommendations
+│   ├── rate_limit.py              # Token bucket limiter
+│   ├── i18n.py                    # Internationalization (English fallback)
+│   └── webhooks.py                # HMAC-signed dispatch
 ├── payments/
-│   ├── base.py                  # PaymentProvider ABC
-│   ├── x402_provider.py         # x402 USDC on Base
-│   ├── paypal_provider.py       # PayPal fiat payments
-│   ├── nowpayments_provider.py  # NOWPayments
-│   └── router.py                # PaymentRouter
+│   ├── base.py                    # PaymentProvider ABC
+│   ├── x402_provider.py           # x402 USDC on Base
+│   ├── paypal_provider.py         # PayPal fiat payments
+│   ├── nowpayments_provider.py    # NOWPayments
+│   └── router.py                  # PaymentRouter
 ├── teamwork/
-│   ├── agent_config.py          # Agent profiles
-│   ├── task_router.py           # Task routing logic
-│   ├── quality_gates.py         # Gate enforcement
-│   ├── orchestrator.py          # Team orchestration
-│   └── templates.py             # Team + service templates
+│   ├── agent_config.py            # Agent profiles
+│   ├── task_router.py             # Task routing logic
+│   ├── quality_gates.py           # Gate enforcement
+│   ├── orchestrator.py            # Team orchestration
+│   └── templates.py               # Team + service templates
+├── sdk/
+│   ├── __init__.py                # Public API: AgenticTradeAgent
+│   ├── agent.py                   # AgenticTradeAgent class (3-line setup)
+│   ├── client.py                  # HTTP client for AgenticTrade API
+│   └── buyer.py                   # Buyer SDK helpers
+├── mcp-server/
+│   └── src/agentictrade_mcp/
+│       └── server.py              # MCP tool server (10 tools: 5 buyer + 5 provider)
 ├── mcp_bridge/
-│   ├── server.py                # MCP tool server (5 tools)
-│   └── discovery.py             # MCP manifest generator
+│   ├── server.py                  # Legacy MCP bridge
+│   └── discovery.py               # MCP manifest generator
 ├── examples/
-│   ├── quickstart.py            # End-to-end quickstart
-│   ├── two_agents_trading.py    # Two-agent trade flow
-│   ├── multi_agent_trade.py     # Three-agent circular economy
-│   ├── team_setup.py            # Team configuration
-│   ├── payment_flow.py          # Payment provider demo
-│   └── webhook_listener.py      # Webhook receiver
+│   ├── quickstart.py              # End-to-end quickstart
+│   ├── two_agents_trading.py      # Two-agent trade flow
+│   ├── multi_agent_trade.py       # Three-agent circular economy
+│   ├── team_setup.py              # Team configuration
+│   ├── payment_flow.py            # Payment provider demo
+│   └── webhook_listener.py        # Webhook receiver
 ├── docs/
-│   └── API_REFERENCE.md         # Full API documentation
-├── tests/                       # Test suite (47+ files, 1513 tests)
-├── docker-compose.yml           # Production deployment
-├── Dockerfile                   # Multi-stage container build
-├── requirements.txt             # Python dependencies
-└── .env.example                 # Environment variable reference
+│   └── API_REFERENCE.md           # Full API documentation
+├── tests/                         # Test suite (47+ files, 1513 tests)
+├── docker-compose.yml             # Production deployment
+├── Dockerfile                     # Multi-stage container build
+├── requirements.txt               # Python dependencies
+└── .env.example                   # Environment variable reference
 ```
 
 ---
